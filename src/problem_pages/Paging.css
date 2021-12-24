@@ -1,0 +1,43 @@
+.collapse-content.collapsed {
+  display: none;
+}
+
+.collapse-content.expanded {
+  display: flex;
+  justify-content: center;
+  padding-top: 1%;
+}
+
+.description {
+  width: 70%;
+  text-align: justify;
+  margin-bottom: 0;
+}
+
+.input-manual {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+label {
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.cache {
+  width: 5%;
+}
+
+h6 {
+  padding-top: 3%;
+  padding-bottom: 2%;
+  text-align: left;
+}
+
+.algorithm-chooser {
+  margin-bottom: 2%;
+}
+
+.random-gen {
+  margin-left: 2%;
+}
