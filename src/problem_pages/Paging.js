@@ -2,6 +2,7 @@ import './Paging.css'
 import { Component } from 'react';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import PagingFIFO from '../algorithms/PagingFIFO';
 
 const Collapse = ({ collapsed, children }) => {
     const [isCollapsed, setIsCollapsed] = useState(!collapsed);
@@ -31,7 +32,8 @@ class Paging extends Component {
       cache: '',
       from: '',
       to: '',
-      number: ''
+      number: '',
+      renderSolution: false
     }
 
     this.changeInput = this.changeInput.bind(this);
@@ -40,6 +42,7 @@ class Paging extends Component {
     this.changeTo = this.changeTo.bind(this);
     this.changeNumber = this.changeNumber.bind(this);
     this.generateRandomInput = this.generateRandomInput.bind(this);
+    this.renderSolution = this.changeRenderSolution.bind(this);
   }
 
   changeInput(event) {
@@ -72,6 +75,12 @@ class Paging extends Component {
     });
   }
 
+  changeRenderSolution() {
+    this.setState({
+      renderSolution: !this.state.renderSolution
+    });
+  }
+
   getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
@@ -79,13 +88,19 @@ class Paging extends Component {
   generateRandomInput() {
     let input = [];
     for (let i = 0; i < this.state.number; i++) {
-      let rnd = this.getRndInteger(parseInt(this.state.from,10) , parseInt(this.state.to,10));
+      let rnd = this.getRndInteger(parseInt(this.state.from, 10) , parseInt(this.state.to, 10));
       input.push(rnd);
     }
     this.setState({input: input})
   }
 
   render() {
+    const solveProblem = () => {
+      if (this.state.renderSolution) {
+        return <PagingFIFO input={this.state.input} cache_size={this.state.cache}/>;
+      }
+    }
+    
       return (
           <div>
               <h3>Paging</h3>
@@ -124,15 +139,16 @@ class Paging extends Component {
                 <label>Size:</label>
                 <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                 <Button variant="secondary" className='random-gen' 
-                onClick={this.generateRandomInput} >Generate random input</Button>
+                onClick={this.generateRandomInput}>Generate random input</Button>
               </div>
               <div className='algorithm-chooser'>
               <h5>Choose algorithm:</h5>
-              <Button>FIFO</Button>
+              <Button onClick={this.renderSolution}>FIFO</Button>
               <Button>LRU</Button>
               <Button variant="danger">LFD</Button>
               </div>
               <Button variant="light">START</Button>
+              {solveProblem()}
           </div>
       );
   }
