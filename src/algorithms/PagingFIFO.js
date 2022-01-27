@@ -53,15 +53,16 @@ class PagingFIFO extends Component {
             }
             history.set(Number(i+1), cache.slice());
         }
+        console.log(cost);
         return {cost, history};
     }
 
     render() {
-        let {finalCost, history} = this.solve(this.props.input, this.props.cache_size);
+        let {cost, history} = this.solve(this.props.input, this.props.cache_size);
         let cacheFromHistory = history.get(this.state.currentStep);
 
-        const listItems = cacheFromHistory.map((number) =>
-            <div key={number} className='cache-items'>{number}</div>
+        const elements = cacheFromHistory.map((e) =>
+            <div key={e} className='cache-items'>{e}</div>
         );
 
         return (
@@ -69,13 +70,13 @@ class PagingFIFO extends Component {
                 <div>
                     Cache:
                 </div>
-                {listItems}
+                {elements}
                 <div>
                 <div>
                     <Button variant="light" onClick={this.nextStep}>Next step</Button>
                     <Button variant="light" onClick={this.previousStep}>Previous step</Button>
                 </div>                
-                    Cost of running FIFO on this input: {finalCost}
+                    The cost of running FIFO on this input: {cost}
                 </div>
             </div>
         )
