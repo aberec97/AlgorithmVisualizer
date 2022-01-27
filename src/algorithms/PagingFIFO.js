@@ -1,17 +1,43 @@
+import './PagingFIFO.css'
 import { Component } from 'react';
+import Button from 'react-bootstrap/Button';
 
 class PagingFIFO extends Component {
 
-    solve(input, cache_size) {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentStep: 0
+        }
 
+        this.nextStep = this.nextStep.bind(this);
+        this.previousStep = this.previousStep.bind(this);
+    }
+
+    nextStep() {
+        if (Number(this.state.currentStep) < Number(this.props.input.length)-1) {
+            this.setState({
+                currentStep: this.state.currentStep + 1
+            });
+        }
+    }
+
+    previousStep() {
+        if (Number(this.state.currentStep) > 0) {
+            this.setState({
+                currentStep: this.state.currentStep - 1
+            });
+        }
+    }
+
+    solve(input, cache_size) {
         let cache = [];
         let cost = 0;
-        const inputString = input;
-        const numbers = inputString.split(" ");
-        const input_array = Array.from(numbers); 
-        
-        for (let i = 0; i < input_array.length; i++) {
-            let currentElement = input_array[i];
+        let history = new Map();
+        history.set(0, cache.slice());
+
+        for (let i = 0; i < input.length; i++) {
+            let currentElement =  input[i];
             if (cache.length < cache_size) {
                 if (!cache.includes(currentElement)) {
                     cache.push(currentElement);
@@ -25,24 +51,32 @@ class PagingFIFO extends Component {
                     cost++;
                 }
             }
-            console.log("CACHE: " + cache);
+            history.set(Number(i+1), cache.slice());
         }
-
-        return cost;
+        return {cost, history};
     }
 
     render() {
-        const inputString = this.props.input;
-        const numbers = inputString.split(" ");
-        const input_array = Array.from(numbers); 
-        const listItems = input_array.map((number) =>
-            <li>{number}</li>
+        let {finalCost, history} = this.solve(this.props.input, this.props.cache_size);
+        let cacheFromHistory = history.get(this.state.currentStep);
+
+        const listItems = cacheFromHistory.map((number) =>
+            <div key={number} className='cache-items'>{number}</div>
         );
 
         return (
             <div>
-                Input: {this.props.input} Cache size: {this.props.cache_size} Cost: {this.solve(this.props.input, this.props.cache_size)}
-                <div>{listItems}</div>
+                <div>
+                    Cache:
+                </div>
+                {listItems}
+                <div>
+                <div>
+                    <Button variant="light" onClick={this.nextStep}>Next step</Button>
+                    <Button variant="light" onClick={this.previousStep}>Previous step</Button>
+                </div>                
+                    Cost of running FIFO on this input: {finalCost}
+                </div>
             </div>
         )
     }

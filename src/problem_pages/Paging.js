@@ -97,7 +97,10 @@ class Paging extends Component {
   render() {
     const solveProblem = () => {
       if (this.state.renderSolution) {
-        return <PagingFIFO input={this.state.input} cache_size={this.state.cache}/>;
+        let inputStr = this.state.input.toString();
+        let withoutCommas = inputStr.replace(/,/g, " ");
+        let inputArray = Array.from(withoutCommas.split(" "));
+        return <PagingFIFO input={inputArray} cache_size={this.state.cache}/>;
       }
     }
     
@@ -147,7 +150,6 @@ class Paging extends Component {
               <Button>LRU</Button>
               <Button variant="danger">LFD</Button>
               </div>
-              <Button variant="light">START</Button>
               {solveProblem()}
           </div>
       );
