@@ -87,12 +87,54 @@ class PagingAlgorithm extends Component {
         return { cost, history };
     }
 
+    solveWithLFD(input, cache_size) {
+        if (input[0] === "") {
+            return { cost: 0, history: null };
+        }
+        let cache = [];
+        let cost = 0;
+        let history = new Map();
+        history.set(0, cache.slice());
+        for (let i = 0; i < input.length; i++) {
+            let currentElement = input[i];
+            if (cache.length < cache_size && !cache.includes(currentElement)) {
+                cache.push(currentElement);
+                cost++;
+            }
+            else {
+                if (!cache.includes(currentElement)) {
+                    let nextCachePos = [];
+                    let elementToRemove;
+                    for (let j = i; j < input.length; j++) {
+                        if (cache.includes(input[j]) && !nextCachePos.includes(input[j])) {
+                            nextCachePos.push(input[j]);
+                        }
+                    }
+                    if (nextCachePos.length < cache.length) {
+                        for (let j = 0; j < cache.length; j++) {
+                            if (!nextCachePos.includes(cache[j])) {
+                                elementToRemove = cache[j]; break;
+                            }
+                        }
+                    } else {
+                        elementToRemove = nextCachePos[nextCachePos.length - 1];
+                    }
+                    cache[cache.indexOf(elementToRemove)] = currentElement;
+                    cost++;
+                }
+            }
+            history.set(Number(i + 1), cache.slice());
+        }
+        return { cost, history };
+    }
+
     solveWithSelectedAlgorithm(selectedAlg, input, cacheSize) {
         if (!selectedAlg) return null;
         let result = { cost: 0, history: null };
         switch (selectedAlg) {
             case "FIFO": result = this.solveWithFIFO(input, cacheSize); break;
             case "LRU": result = this.solveWithLRU(input, cacheSize); break;
+            case "LFD": result = this.solveWithLFD(input, cacheSize); break;
             default: result = null;
         }
         return result;
@@ -126,7 +168,7 @@ class PagingAlgorithm extends Component {
                         <Button variant="light" onClick={() => this.nextStep(this.props.inputArray.length)}>Next step</Button>
                         <Button variant="light" onClick={this.previousStep}>Previous step</Button>
                     </div>
-                    The cost of running FIFO on this input is {cost}
+                    The cost of running {this.props.selectedAlgorithm} on this input is {cost}
                 </div>
             </div>
         )
