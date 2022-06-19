@@ -1,0 +1,9 @@
+.collapse-content.collapsed {
+    display: none;
+}
+  
+.collapse-content.expanded {
+    display: flex;
+    justify-content: center;
+    padding-top: 1%;
+}
