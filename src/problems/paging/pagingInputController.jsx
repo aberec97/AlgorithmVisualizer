@@ -55,10 +55,11 @@ class PagingInputController extends Component {
   }
 
   readInput = () => {
-    let inputStr = this.state.input.toString();
-    let withoutCommas = inputStr.replace(/,/g, " ");
-    let inputArray = Array.from(withoutCommas.split(" "));
-    this.props.onSetInputArray(inputArray);
+    const inputStr = this.state.input.toString();
+    const withoutCommas = inputStr.replace(/,/g, " ");
+    const inputArray = Array.from(withoutCommas.split(" "));
+    const onlyNumbers = inputArray.filter(Number);
+    this.props.onSetInputArray(onlyNumbers);
     this.props.onSetCacheSize(this.state.cache);
   };
 

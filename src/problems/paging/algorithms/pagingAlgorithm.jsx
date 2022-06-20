@@ -5,11 +5,14 @@ import Button from 'react-bootstrap/Button';
 
 class PagingAlgorithm extends Component {
     state = {
-        currentStep: 0
+        currentStep: 0,
+        cost: 0,
+        history: new Map()
     }
 
-    nextStep = length => {
-        if (length === 0) return;
+    nextStep = () => {
+        const length = this.props.inputArray.length;
+        if (length === 0 || !this.state.history || this.state.cost === 0) return;
         if (Number(this.state.currentStep) < Number(length)) {
             this.setState({
                 currentStep: this.state.currentStep + 1
@@ -18,6 +21,7 @@ class PagingAlgorithm extends Component {
     };
 
     previousStep = () => {
+        if (!this.state.history || this.state.cost === 0) return;
         if (Number(this.state.currentStep) > 0) {
             this.setState({
                 currentStep: this.state.currentStep - 1
@@ -26,7 +30,7 @@ class PagingAlgorithm extends Component {
     };
 
     solveWithFIFO(input, cache_size) {
-        if (input[0] === "") {
+        if (input.length === 0) {
             return { cost: 0, history: null };
         }
         let cache = [];
@@ -52,7 +56,7 @@ class PagingAlgorithm extends Component {
     }
 
     solveWithLRU(input, cache_size) {
-        if (input[0] === "") {
+        if (input.length === 0) {
             return { cost: 0, history: null };
         }
         let cache = [];
@@ -88,7 +92,7 @@ class PagingAlgorithm extends Component {
     }
 
     solveWithLFD(input, cache_size) {
-        if (input[0] === "") {
+        if (input.length === 0) {
             return { cost: 0, history: null };
         }
         let cache = [];
@@ -130,6 +134,7 @@ class PagingAlgorithm extends Component {
 
     solveWithSelectedAlgorithm(selectedAlg, input, cacheSize) {
         if (!selectedAlg) return null;
+        console.log("algo ran!");
         let result = { cost: 0, history: null };
         switch (selectedAlg) {
             case "FIFO": result = this.solveWithFIFO(input, cacheSize); break;
@@ -137,6 +142,7 @@ class PagingAlgorithm extends Component {
             case "LFD": result = this.solveWithLFD(input, cacheSize); break;
             default: result = null;
         }
+        this.setState({ cost: result['cost'], history: result['history'] });
         return result;
     }
 
@@ -145,30 +151,36 @@ class PagingAlgorithm extends Component {
         let inputString = this.props.inputArray.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
-        let { cost, history } = this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize);
+        let elements = <React.Fragment></React.Fragment>;
+        let cacheFromHistory;
 
-        if (history === null) {
+        if (!this.state.history) {
             return (<p>Provide an input!</p>);
         }
-        let cacheFromHistory = history.get(this.state.currentStep);
 
-        const elements = cacheFromHistory.map((e) =>
-            <div key={e} className='cache-items'>{e}</div>
-        );
+        if (this.state.currentStep > 0 && this.state.cost > 0) {
+            cacheFromHistory = this.state.history.get(this.state.currentStep);
+            elements = cacheFromHistory.map((e) =>
+                <div key={e} className='cache-items'>{e}</div>
+            );
+        }
 
         return (
             <div>
-                <p>Running {this.props.selectedAlgorithm} on &#123; {inputStringForRender} &#125; with cache size: {this.props.cacheSize}</p>
+                <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.
+                    Now press the Run button to see the result!</p>
+                <button className='btn btn-success' onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>Run</button>
                 <div>
                     Cache:
                 </div>
                 {elements}
                 <div>
                     <div>
-                        <Button variant="light" onClick={() => this.nextStep(this.props.inputArray.length)}>Next step</Button>
+                        <Button variant="light" onClick={this.nextStep}>Next step</Button>
                         <Button variant="light" onClick={this.previousStep}>Previous step</Button>
                     </div>
-                    The cost of running {this.props.selectedAlgorithm} on this input is {cost}
+                    <h1>{this.props.inputArray[this.state.currentStep]}</h1>
+                    The cost of running {this.props.selectedAlgorithm} on this input is {this.state.cost}
                 </div>
             </div>
         )
