@@ -1,33 +1,57 @@
 import './pagingAlg.css'
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import PagingVisualization from './pagingVisualization';
 
 
 class PagingAlgorithm extends Component {
     state = {
         currentStep: 0,
         cost: 0,
-        history: new Map()
+        history: new Map(),
+        indexOfRemoved: -1
     }
 
     nextStep = () => {
         const length = this.props.inputArray.length;
         if (length === 0 || !this.state.history || this.state.cost === 0) return;
-        if (Number(this.state.currentStep) < Number(length)) {
-            this.setState({
-                currentStep: this.state.currentStep + 1
-            });
+        let currentStep = this.state.currentStep;
+        let nextStep = currentStep + 1;
+        if (Number(currentStep) < Number(length) - 1) {
+            let indexOfRemoved = this.findRemovedElement(this.state.history.get(nextStep), this.state.history.get(nextStep + 1));
+            this.setState({ indexOfRemoved });
+        } else {
+            this.setState({ indexOfRemoved: -1 });
+        }
+        if (Number(currentStep) < Number(length)) {
+            this.setState({ currentStep: nextStep });
         }
     };
 
     previousStep = () => {
         if (!this.state.history || this.state.cost === 0) return;
-        if (Number(this.state.currentStep) > 0) {
-            this.setState({
-                currentStep: this.state.currentStep - 1
-            });
+        let currentStep = this.state.currentStep;
+        let prevStep = currentStep - 1;
+        if (Number(currentStep) > 1) {
+            let indexOfRemoved = this.findRemovedElement(this.state.history.get(prevStep), this.state.history.get(currentStep));
+            this.setState({ indexOfRemoved });
+        } else {
+            this.setState({ indexOfRemoved: -1 });
+        }
+        if (Number(currentStep) > 0) {
+            this.setState({ currentStep: prevStep });
         }
     };
+
+    findRemovedElement(currCache, nextCache) {
+        let removedElementIndex = -1;
+        for (let i = 0; i < currCache.length; i++) {
+            if (!nextCache.includes(currCache[i])) {
+                removedElementIndex = i;
+            }
+        }
+        return removedElementIndex;
+    }
 
     solveWithFIFO(input, cache_size) {
         if (input.length === 0) {
@@ -134,7 +158,6 @@ class PagingAlgorithm extends Component {
 
     solveWithSelectedAlgorithm(selectedAlg, input, cacheSize) {
         if (!selectedAlg) return null;
-        console.log("algo ran!");
         let result = { cost: 0, history: null };
         switch (selectedAlg) {
             case "FIFO": result = this.solveWithFIFO(input, cacheSize); break;
@@ -160,26 +183,33 @@ class PagingAlgorithm extends Component {
 
         if (this.state.currentStep > 0 && this.state.cost > 0) {
             cacheFromHistory = this.state.history.get(this.state.currentStep);
-            elements = cacheFromHistory.map((e) =>
-                <div key={e} className='cache-items'>{e}</div>
-            );
+            elements = cacheFromHistory;
         }
 
         return (
             <div>
                 <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.
                     Now press the Run button to see the result!</p>
-                <button className='btn btn-success' onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>Run</button>
-                <div>
-                    Cache:
-                </div>
-                {elements}
+                <button
+                    className='btn btn-success'
+                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>
+                    Run
+                </button>
+                <br />
+                <PagingVisualization
+                    inputArray={this.props.inputArray}
+                    cacheSize={this.props.cacheSize}
+                    currentStep={this.state.currentStep}
+                    cacheElements={elements}
+                    removedElementIndex={this.state.indexOfRemoved}>
+                </PagingVisualization>
+                <br />
                 <div>
                     <div>
-                        <Button variant="light" onClick={this.nextStep}>Next step</Button>
-                        <Button variant="light" onClick={this.previousStep}>Previous step</Button>
+                        <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                        <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                     </div>
-                    <h1>{this.props.inputArray[this.state.currentStep]}</h1>
+                    <br />
                     The cost of running {this.props.selectedAlgorithm} on this input is {this.state.cost}
                 </div>
             </div>
