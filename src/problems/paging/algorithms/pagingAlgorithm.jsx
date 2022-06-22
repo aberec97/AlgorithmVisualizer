@@ -175,21 +175,19 @@ class PagingAlgorithm extends Component {
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
         let elements = <React.Fragment></React.Fragment>;
-        let cacheFromHistory;
 
         if (!this.state.history) {
             return (<p>Provide an input!</p>);
         }
 
         if (this.state.currentStep > 0 && this.state.cost > 0) {
-            cacheFromHistory = this.state.history.get(this.state.currentStep);
-            elements = cacheFromHistory;
+            elements = this.state.history.get(this.state.currentStep);
         }
 
         return (
             <div>
                 <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.
-                    Now press the Run button to see the result!</p>
+                    Press the Run button to see the result!</p>
                 <button
                     className='btn btn-success'
                     onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>

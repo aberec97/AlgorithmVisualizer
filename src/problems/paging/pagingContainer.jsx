@@ -56,7 +56,8 @@ class PagingContainer extends Component {
                 </Description>
                 <PagingInputController
                     onSetInputArray={this.handleSetInputArray}
-                    onSetCacheSize={this.handleSetCacheSize}>
+                    onSetCacheSize={this.handleSetCacheSize}
+                    label={"Cache size:"}>
                 </PagingInputController>
                 <div className='algorithm-chooser'>
                     <h5>Choose an algorithm:</h5>

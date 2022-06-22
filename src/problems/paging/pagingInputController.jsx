@@ -67,7 +67,7 @@ class PagingInputController extends Component {
     return (
       <div>
         <h6>
-          Provide an input with whole numbers, for separation use commas (",") or spaces (" ")! Cache size should be small.
+          Provide an input with whole numbers, for separation use commas (",") or spaces (" ")!
         </h6>
         <div className="input-manual">
           <label>
@@ -75,7 +75,7 @@ class PagingInputController extends Component {
           </label>
           <input type="text" value={this.state.input} onChange={this.changeInput} />
           <label>
-            Cache size:
+            {this.props.label}
           </label>
           <input type="number" value={this.state.cache} onChange={this.changeCache} className='cache' />
           <button className='btn btn-success' onClick={this.readInput}>Save</button>

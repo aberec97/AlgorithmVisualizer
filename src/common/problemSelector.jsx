@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PagingContainer from "../problems/paging/pagingContainer";
+import SchedulingContainer from '../problems/scheduling/schedulingContainer';
 
 class ProblemSelector extends Component {
     render() {
@@ -8,7 +9,7 @@ class ProblemSelector extends Component {
 
         switch (selectedProblem) {
             case "Paging": renderedProblem = <PagingContainer></PagingContainer>; break;
-            case "Scheduling": renderedProblem = <PagingContainer></PagingContainer>; break;
+            case "Scheduling": renderedProblem = <SchedulingContainer></SchedulingContainer>; break;
             default:
         }
 
