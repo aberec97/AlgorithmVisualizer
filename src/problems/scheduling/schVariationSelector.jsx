@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import DependentScheduling from './dependentScheduling';
+import IndependentScheduling from './independentScheduling';
+import SchTimeModel from './schTimeModel';
 import StandardScheduling from './standardScheduling';
 
 class SchVariationSelector extends Component {
@@ -7,9 +10,9 @@ class SchVariationSelector extends Component {
         let variation = <div></div>;
         switch (this.props.selectedVariation) {
             case "Standard": variation = <StandardScheduling></StandardScheduling>; break;
-            case "Independent machines": variation = <StandardScheduling></StandardScheduling>; break;
-            case "Dependent machines": variation = <StandardScheduling></StandardScheduling>; break;
-            case "Time model": variation = <StandardScheduling></StandardScheduling>; break;
+            case "Independent machines": variation = <IndependentScheduling></IndependentScheduling>; break;
+            case "Dependent machines": variation = <DependentScheduling></DependentScheduling>; break;
+            case "Time model": variation = <SchTimeModel></SchTimeModel>; break;
             default:
         }
 

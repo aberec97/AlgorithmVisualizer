@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import Description from '../../common/description';
-import PagingInputController from '../paging/pagingInputController';
-import './scheduling.css';
-import StandardSchVisualization from './standardSchVisualization';
-import Button from 'react-bootstrap/Button';
+import IndependentSchInput from './independentSchInput';
 
-class StandardScheduling extends Component {
+class IndependentScheduling extends Component {
     state = {
         inputArray: '',
         numOfMachines: '',
@@ -75,51 +72,30 @@ class StandardScheduling extends Component {
     }
 
     render() {
-
         let loadsFromHistory;
 
         if (this.state.makeSpan > 0) {
             loadsFromHistory = this.state.history.get(this.state.currentStep);
         }
 
-        return (
-            <React.Fragment>
-                <h3>Standard scheduling</h3>
-                <Description>
-                    <p className="description">
-                        In the standard version of scheduling, the jobs can be simply represented as numbers.
-                        These numbers tell how much time each job requires. LIST is an online algorithm for this problem which
-                        always schedules the next job to the first machine available.
-                    </p>
-                </Description>
-                <PagingInputController
+        return (<React.Fragment>
+            <h3>Independent Machines</h3>
+            <Description>
+                <p className="description">
+                    In this variant of the scheduling problem the execution times of the jobs can differ on every machine.
+                    For example it is possible for a job to take 1 minute on the first machine and 2 on the second, we would represend
+                    this as (1,2). The LIST algorithm for independent machines takes into consideration these different runtimes when determining
+                    the loads. When a new job comes, it schedules it for the machine that would least increase the makespan.
+                </p>
+            </Description>
+            <div>
+                <IndependentSchInput
                     onSetInputArray={this.handleSetInputArray}
-                    onSetCacheSize={this.handleSetNumOfMachines}
-                    label={"Number of machines:"}>
-                </PagingInputController>
-                <br />
-                <button
-                    className='btn btn-success'
-                    onClick={() => this.solveWithList(this.state.inputArray, this.state.numOfMachines)}>
-                    Run LIST algorithm
-                </button>
-                <br />
-                <br />
-                <StandardSchVisualization
-                    inputArray={this.state.inputArray}
-                    numOfMachines={this.state.numOfMachines}
-                    currentStep={this.state.currentStep}
-                    loadsFromHistory={loadsFromHistory}
-                    makeSpan={this.state.makeSpan}
-                    visualize={this.state.visualize}
-                >
-                </StandardSchVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-
-            </React.Fragment>
-        );
+                    onSetNumOfMachines={this.handleSetNumOfMachines}>
+                </IndependentSchInput>
+            </div>
+        </React.Fragment>);
     }
 }
 
-export default StandardScheduling;
+export default IndependentScheduling;

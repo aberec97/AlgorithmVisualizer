@@ -7,22 +7,20 @@ class StandardSchVisualization extends Component {
     render() {
 
         if (!this.props.visualize) {
-            return <React.Fragment>Run the algorithm!</React.Fragment>;
+            return <React.Fragment>Run the algorithm! <br /> </React.Fragment>;
         }
 
         let jobs = [];
         let numOfMachines;
         let machinesForRender = [];
         let loadsFromHistory = [];
-        let loadsForRender = [];
         if (this.props.inputArray && this.props.inputArray.length > 0 && this.props.numOfMachines > 0) {
             jobs = this.props.inputArray;
             numOfMachines = this.props.numOfMachines;
             loadsFromHistory = this.props.loadsFromHistory;
             for (let i = 0; i < numOfMachines; i++) {
-                machinesForRender.push(<i key={i} className="fa-solid fa-desktop"></i>);
                 let load = (loadsFromHistory[i] * 2) + "em";
-                loadsForRender.push(<div key={i} className='load' style={{ width: load }}>{loadsFromHistory[i]}</div>);
+                machinesForRender.push(<div key={i} style={{ display: "flex" }}><i className="fa-solid fa-desktop fa-xl"></i><div className='load' style={{ width: load }}>{loadsFromHistory[i]}</div></div>);
             }
         }
         else {
@@ -34,15 +32,14 @@ class StandardSchVisualization extends Component {
 
         return (
             <React.Fragment>
-                {inputStringForRender} and {numOfMachines}
+                The input is &#123; {inputStringForRender} &#125; with {numOfMachines} machines.
                 <div className='machines-loads'>
                     <div className='machines'>
                         {machinesForRender}
                     </div>
-                    <div className='machines'>
-                        {loadsForRender}
-                    </div>
                 </div>
+                makespan = {this.props.makeSpan}
+                <br />
             </React.Fragment>
         );
     }

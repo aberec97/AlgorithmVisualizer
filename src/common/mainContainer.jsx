@@ -14,12 +14,10 @@ class MainContainer extends Component {
         const onlineAlgs = [
             { id: 1, name: "Paging" },
             { id: 2, name: "Scheduling" },
-            { id: 3, name: "Bin Packing" },
-        ];
-
-        const sortingAlgs = [
-            { id: 1, name: "Bubble sort" },
-            { id: 2, name: "Insertion sort" },
+            { id: 3, name: "List Access" },
+            { id: 4, name: "Bin Packing" },
+            { id: 5, name: "Strip Packing" },
+            { id: 6, name: "K-server Problem" },
         ];
 
         return (<React.Fragment>
@@ -33,10 +31,6 @@ class MainContainer extends Component {
                     title="Online Algorithm Problems"
                     buttons={onlineAlgs}
                     onSelect={this.handleProblemSelect}
-                ></TitleAndButtons>
-                <TitleAndButtons
-                    title="Sorting Algorithms"
-                    buttons={sortingAlgs}
                 ></TitleAndButtons>
             </div>
 

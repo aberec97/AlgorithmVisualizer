@@ -6,7 +6,7 @@
 
 .load {
   background-color: green;
-  height: 1em;
+  height: 2em;
   border: 1px solid gainsboro;
 }
 
@@ -21,4 +21,9 @@
 .machines {
   float: left;
   display: grid;
+  margin-bottom: 1em;
+}
+
+.fa-xl {
+  line-height: inherit;
 }
