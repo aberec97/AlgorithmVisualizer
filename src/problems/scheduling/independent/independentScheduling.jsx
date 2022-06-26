@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import Description from '../../common/description';
+import Description from '../../../common/description';
 import IndependentSchInput from './independentSchInput';
+import IndependentSchVisualization from './independentSchVisualization';
+import Button from 'react-bootstrap/Button';
 
 class IndependentScheduling extends Component {
     state = {
@@ -44,30 +46,33 @@ class IndependentScheduling extends Component {
         for (let j = 0; j < numOfMachines; j++) {
             machines.push(Number(0));
         }
-
         let history = new Map();
         history.set(0, machines.slice());
 
-        let minimumLoad = Number.MAX_VALUE;
         for (let i = 0; i < input.length; i++) {
+            let job = input[i];
+            let smallestLoad = Number.MAX_VALUE;
+            let indexToPutLoadOn = Number(0);
+            let newLoad = Number(0);
             for (let j = 0; j < numOfMachines; j++) {
-                if (machines[j] < minimumLoad) {
-                    minimumLoad = machines[j];
+                let loadOfCurrentMachine = Number(machines[j]) + Number(job[j]);
+                if (loadOfCurrentMachine < smallestLoad) {
+                    smallestLoad = loadOfCurrentMachine;
+                    indexToPutLoadOn = j;
+                    newLoad = job[j];
                 }
             }
-            machines[machines.indexOf(minimumLoad)] += Number(input[i]);
-            minimumLoad += Number(input[i]);
-            history.set(Number(i + 1), machines.slice());
+            machines[indexToPutLoadOn] += Number(newLoad);
+            history.set(i + 1, machines.slice());
         }
 
         let makeSpan = 0;
-        for (let j = 0; j < numOfMachines; j++) {
-            if (machines[j] >= makeSpan) {
-                makeSpan = machines[j];
+        for (let i = 0; i < numOfMachines; i++) {
+            if (machines[i] > makeSpan) {
+                makeSpan = machines[i];
             }
         }
-        console.log("machines = ", machines);
-        console.log("makespan: ", makeSpan);
+
         this.setState({ makeSpan, history, visualize: true });
     }
 
@@ -79,7 +84,7 @@ class IndependentScheduling extends Component {
         }
 
         return (<React.Fragment>
-            <h3>Independent Machines</h3>
+            <h3>Unrelated Machines</h3>
             <Description>
                 <p className="description">
                     In this variant of the scheduling problem the execution times of the jobs can differ on every machine.
@@ -88,12 +93,28 @@ class IndependentScheduling extends Component {
                     the loads. When a new job comes, it schedules it for the machine that would least increase the makespan.
                 </p>
             </Description>
-            <div>
-                <IndependentSchInput
-                    onSetInputArray={this.handleSetInputArray}
-                    onSetNumOfMachines={this.handleSetNumOfMachines}>
-                </IndependentSchInput>
-            </div>
+            <IndependentSchInput
+                onSetInputArray={this.handleSetInputArray}
+                onSetNumOfMachines={this.handleSetNumOfMachines}>
+            </IndependentSchInput>
+            <br />
+            <button
+                className='btn btn-success'
+                onClick={() => this.solveWithList(this.state.inputArray, this.state.numOfMachines)}>
+                Run LIST algorithm
+            </button>
+            <br />
+            <br />
+            <IndependentSchVisualization
+                inputArray={this.state.inputArray}
+                numOfMachines={this.state.numOfMachines}
+                currentStep={this.state.currentStep}
+                loadsFromHistory={loadsFromHistory}
+                makeSpan={this.state.makeSpan}
+                visualize={this.state.visualize}>
+            </IndependentSchVisualization>
+            <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+            <Button variant="light" onClick={this.nextStep}>&gt;</Button>
         </React.Fragment>);
     }
 }

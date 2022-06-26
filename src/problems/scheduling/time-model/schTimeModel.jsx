@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Description from '../../common/description';
+import Description from '../../../common/description';
 import SchTimeModelInput from './schTimeModelInput';
 
 class SchTimeModel extends Component {

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import Description from '../../common/description';
-import PagingInputController from '../paging/pagingInputController';
-import './scheduling.css';
-import StandardSchVisualization from './standardSchVisualization';
+import Description from '../../../common/description';
+import DependentSchInput from './dependentSchInput';
+import StandardSchVisualization from '../standard/standardSchVisualization';
 import Button from 'react-bootstrap/Button';
 
-class StandardScheduling extends Component {
+class DependentScheduling extends Component {
     state = {
         inputArray: '',
-        numOfMachines: '',
+        machineSpeeds: '',
         currentStep: 0,
         makeSpan: '',
         history: new Map(),
@@ -19,8 +18,8 @@ class StandardScheduling extends Component {
         this.setState({ inputArray });
     };
 
-    handleSetNumOfMachines = (numOfMachines) => {
-        this.setState({ numOfMachines });
+    handleSetMachineSpeeds = (machineSpeeds) => {
+        this.setState({ machineSpeeds });
     };
 
     nextStep = () => {
@@ -48,34 +47,43 @@ class StandardScheduling extends Component {
             machines.push(Number(0));
         }
 
+        console.log("numofMachines: ", numOfMachines);
+
         let history = new Map();
         history.set(0, machines.slice());
 
-        let minimumLoad = Number.MAX_VALUE;
+        let machineSpeeds = this.state.machineSpeeds;
+
         for (let i = 0; i < input.length; i++) {
+            let job = Number(input[i]);
+            let smallestLoad = Number.MAX_VALUE;
+            let indexOfSmallestLoad = 0;
+            let nextLoad = 0;
             for (let j = 0; j < numOfMachines; j++) {
-                if (machines[j] < minimumLoad) {
-                    minimumLoad = machines[j];
+                let loadOnThisMachine = Number(machines[j]) + job / Number(machineSpeeds[j]);
+                if (loadOnThisMachine < smallestLoad) {
+                    smallestLoad = loadOnThisMachine;
+                    nextLoad = job / Number(machineSpeeds[j]);
+                    indexOfSmallestLoad = j;
                 }
             }
-            machines[machines.indexOf(minimumLoad)] += Number(input[i]);
-            minimumLoad += Number(input[i]);
+            machines[indexOfSmallestLoad] += nextLoad;
             history.set(Number(i + 1), machines.slice());
         }
 
+        console.log("history: ", history);
+
         let makeSpan = 0;
-        for (let j = 0; j < numOfMachines; j++) {
-            if (machines[j] >= makeSpan) {
-                makeSpan = machines[j];
+        for (let i = 0; i < machines.length; i++) {
+            if (machines[i] > makeSpan) {
+                makeSpan = machines[i];
             }
         }
-        console.log("machines = ", machines);
-        console.log("makespan: ", makeSpan);
+
         this.setState({ makeSpan, history, visualize: true });
     }
 
     render() {
-
         let loadsFromHistory;
 
         if (this.state.makeSpan > 0) {
@@ -84,30 +92,30 @@ class StandardScheduling extends Component {
 
         return (
             <React.Fragment>
-                <h3>Standard scheduling</h3>
+                <h3>Related Machines</h3>
                 <Description>
                     <p className="description">
-                        In the standard version of scheduling, the jobs can be simply represented as numbers.
-                        These numbers tell how much time each job requires. LIST is an online algorithm for this problem which
-                        always schedules the next job to the first machine available.
+                        In this variant of the scheduling problem the execution times of the jobs are the same but the speed of the machines can differ.
+                        The jobs can be represented as numbers and for each machine we have to specify a speed.
+                        The LIST algorithm for dependent machines takes into consideration how fast the upcoming job can be completed on the different machines
+                        and how big the makespan would be.
                     </p>
                 </Description>
-                <PagingInputController
+                <DependentSchInput
                     onSetInputArray={this.handleSetInputArray}
-                    onSetCacheSize={this.handleSetNumOfMachines}
-                    label={"Number of machines:"}>
-                </PagingInputController>
+                    onSetMachineSpeeds={this.handleSetMachineSpeeds}
+                ></DependentSchInput>
                 <br />
                 <button
                     className='btn btn-success'
-                    onClick={() => this.solveWithList(this.state.inputArray, this.state.numOfMachines)}>
+                    onClick={() => this.solveWithList(this.state.inputArray, this.state.machineSpeeds.length)}>
                     Run LIST algorithm
                 </button>
                 <br />
                 <br />
                 <StandardSchVisualization
                     inputArray={this.state.inputArray}
-                    numOfMachines={this.state.numOfMachines}
+                    numOfMachines={this.state.machineSpeeds.length}
                     currentStep={this.state.currentStep}
                     loadsFromHistory={loadsFromHistory}
                     makeSpan={this.state.makeSpan}
@@ -116,10 +124,9 @@ class StandardScheduling extends Component {
                 </StandardSchVisualization>
                 <Button variant="light" onClick={this.previousStep}>&lt;</Button>
                 <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-
             </React.Fragment>
         );
     }
 }
 
-export default StandardScheduling;
+export default DependentScheduling;

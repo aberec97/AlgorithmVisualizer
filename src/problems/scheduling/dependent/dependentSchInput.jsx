@@ -101,8 +101,8 @@ class DependentSchInput extends Component {
         return (
             <React.Fragment>
                 <h6>
-                    Provide an input with whole numbers! You can use spaces (" ") or commas (",") for separation. First provide a speed for each machine
-                    (the number of speeds determines the number of machines) and then list the jobs.
+                    List the jobs and then provide a speed for each machine
+                    (the number of speeds determines the number of machines). You can use spaces (" ") or commas (",") for separation.
                 </h6>
                 <div className="input-manual">
                     <label>

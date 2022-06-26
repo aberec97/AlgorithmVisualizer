@@ -50,7 +50,6 @@ class IndependentSchInput extends Component {
             this.setState({ warning: <div>Specify the number of machines, range and how many random jobs you want!</div> });
             return;
         }
-        console.log(this.state.machines);
         let input = [];
         for (let i = 0; i < this.state.number; i++) {
             let job = [];
@@ -58,7 +57,8 @@ class IndependentSchInput extends Component {
                 let rnd = this.getRndInteger(parseInt(this.state.from, 10), parseInt(this.state.to, 10));
                 job.push(rnd.toString());
             }
-            input.push(job + ';');
+            if (i < this.state.number - 1) input.push(job + ';');
+            else input.push(job);
         }
         this.setState({ input: input, warning: <div></div> })
     }
@@ -68,7 +68,6 @@ class IndependentSchInput extends Component {
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
         const jobs = separated.map(s => Array.from(s.split(" ")));
-        console.log(jobs);
         const onlyNumbers = jobs.map(j => j.filter(Number));
         console.log(onlyNumbers);
         this.props.onSetInputArray(onlyNumbers);

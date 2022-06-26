@@ -25,8 +25,8 @@ class SchedulingContainer extends Component {
 
         const variations = [
             { id: 1, name: "Standard" },
-            { id: 2, name: "Independent machines" },
-            { id: 3, name: "Dependent machines" },
+            { id: 2, name: "Related machines" },
+            { id: 3, name: "Unrelated machines" },
             { id: 4, name: "Time model" }
         ];
 

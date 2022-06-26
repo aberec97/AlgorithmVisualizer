@@ -1,0 +1,23 @@
+.bin {
+    border: 2px solid yellow;
+    border-top: none;
+    width: 4em;
+    height: 10em;
+    display: flex;
+    flex-direction: column-reverse;
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.bin-item {
+    width: 3.76em;
+    border-top: 2px solid red;
+}
+
+.bin-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
