@@ -9,8 +9,8 @@ class BinPackingVisualization extends Component {
             let fullness = this.props.bins[i]['fullness'] + "em";
             bins.push(
                 this.props.bins[i]['fullness'] === 10 ?
-                    <div className="bin"><div style={{ height: fullness }} className="bin-item">{this.props.bins[i]['fullness'] / 10}</div></div> :
-                    <div className="bin"><div style={{ height: fullness }} className="bin-item">0.{this.props.bins[i]['fullness']}</div></div>);
+                    <div className="bin"><div key={i} style={{ height: fullness }} className="bin-item">{this.props.bins[i]['fullness'] / 10}</div></div> :
+                    <div className="bin"><div key={i} style={{ height: fullness }} className="bin-item">0.{this.props.bins[i]['fullness']}</div></div>);
         }
 
         return (

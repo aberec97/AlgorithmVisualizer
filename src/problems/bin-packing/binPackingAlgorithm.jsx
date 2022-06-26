@@ -55,12 +55,10 @@ class BinPackingAlgorithm extends Component {
 
         for (let i = 0; i < input.length; i++) {
             let item = Number(input[i]) * 10;
-            console.log("current item: ", item);
             let openBin = bins[bins.length - 1];
             if (item + Number(openBin['fullness']) <= Number(openBin['capacity'])) {
                 let sum = openBin['fullness'] + item;
                 openBin['fullness'] = sum;
-                console.log(sum);
             } else {
                 bins.push({
                     capacity: 10,
@@ -71,8 +69,6 @@ class BinPackingAlgorithm extends Component {
             //how many steps the algo takes can be extracted from here
             history.set(Number(i + 1), bins.slice());
         }
-        console.log("bins: ", bins);
-        console.log("cost: ", cost);
         return { cost, history };
     }
 
@@ -82,7 +78,7 @@ class BinPackingAlgorithm extends Component {
         let cost = 0;
         let bins = [];
         let bin = {
-            capacity: 1,
+            capacity: 10,
             fullness: 0
         }
         bins.push(bin);
@@ -91,16 +87,23 @@ class BinPackingAlgorithm extends Component {
         history.set(0, bins.slice());
 
         for (let i = 0; i < input.length; i++) {
-            let item = Number(input[i]);
+            let item = Number(input[i]) * 10;
             for (let j = 0; j < bins.length; j++) {
-                if (item + Number(bins[j]['fullness']) <= Number(bins[j]['capacity'])) {
-                    bins[j]['fullness'] += item;
-                    break;
+                let currentBin = bins[j];
+                if (item + Number(currentBin['fullness']) <= Number(currentBin['capacity'])) {
+                    currentBin['fullness'] += item;
+                    item = 0;
                 }
-
             }
+            if (item !== 0) {
+                bins.push({
+                    capacity: 10,
+                    fullness: item
+                });
+                cost += 1;
+            }
+            history.set(Number(i + 1), bins.slice());
         }
-
 
         return { cost, history };
     }
@@ -118,7 +121,6 @@ class BinPackingAlgorithm extends Component {
 
         if (this.state.cost > 0) {
             bins = this.state.history.get(this.state.currentStep);
-            console.log("binZ: ", bins);
         }
 
         return (
