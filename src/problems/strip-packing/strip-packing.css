@@ -1,7 +1,8 @@
 .loading-bay {
     width: 20.25em;
     max-width: 20.25em;
-    height: 30em;
+    max-height: 55em;
+    overflow: auto;
     border: 2px solid yellow;
     border-top: none;
     display: flex;
@@ -10,8 +11,11 @@
 }
 
 .bay-container {
+    max-height: 55em;
+    overflow: auto;
     display: flex;
     justify-content: center;
+    align-items: flex-end;
 }
 
 .shelf {
