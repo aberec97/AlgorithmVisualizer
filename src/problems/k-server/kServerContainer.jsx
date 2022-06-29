@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Description from '../../common/description';
 import KServerInput from './kServerInput';
 import ButtonHolder from '../../common/buttonHolder';
-import KServerAlgorithm from './KServerAlgorithm';
+import KServerAlgorithm from './kServerAlgorithm';
 
 class KServerContainer extends Component {
     state = {
