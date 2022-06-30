@@ -114,7 +114,6 @@ class ListAccessAlgorithm extends Component {
 
         if (this.state.cost > 0) {
             linkedList = this.state.history.get(this.state.currentStep);
-            console.log("linked list: ", linkedList);
         }
 
         return (
@@ -128,7 +127,9 @@ class ListAccessAlgorithm extends Component {
                 </button>
                 <br />
                 <ListAccessVisualization
-                    linkedList={linkedList}>
+                    linkedList={linkedList}
+                    input={this.props.queries}
+                    currentStep={this.state.currentStep}>
                 </ListAccessVisualization>
                 <br />
                 <div>

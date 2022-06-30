@@ -136,7 +136,8 @@ class BinPackingAlgorithm extends Component {
                 <br />
                 <BinPackingVisualization
                     bins={bins}
-                    currentStep={this.state.currentStep}>
+                    currentStep={this.state.currentStep}
+                    input={this.props.input}>
                 </BinPackingVisualization>
                 <br />
                 <div>

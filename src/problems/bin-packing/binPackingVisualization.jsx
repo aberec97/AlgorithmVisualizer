@@ -18,7 +18,7 @@ class BinPackingVisualization extends Component {
                 <div className='bin-container'>
                     {bins}
                 </div>
-                current step = {this.props.currentStep}
+                Current step = {this.props.currentStep} / {this.props.input.length}
             </React.Fragment>
         );
     }

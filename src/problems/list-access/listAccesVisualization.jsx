@@ -14,6 +14,8 @@ class ListAccessVisualization extends Component {
         return (
             <React.Fragment>
                 {elements}
+                <br />
+                Current Step = {this.props.currentStep} / {this.props.input.length}
             </React.Fragment>
         );
     }

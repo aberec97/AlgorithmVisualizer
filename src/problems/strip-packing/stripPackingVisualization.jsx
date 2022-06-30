@@ -11,7 +11,7 @@ class StripPackingVisualization extends Component {
 
         if (!shelves) return <React.Fragment>Something went wrong! <br /></React.Fragment>;
 
-
+        if (!this.props.inputArray) return <React.Fragment>Provide an input! <br /></React.Fragment>;
 
         const heightMultiplier = 15;
         const widthMultiplier = 20;
