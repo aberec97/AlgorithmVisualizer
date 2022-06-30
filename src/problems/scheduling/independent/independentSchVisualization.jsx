@@ -27,8 +27,8 @@ class IndependentSchVisualization extends Component {
             return <React.Fragment>Please provide an input!</React.Fragment>;
         }
 
-        let inputString = jobs.toString();
-        let inputStringForRender = inputString.replace(/,/g, ", ");
+        let inputString = jobs.map(j => j + ";").toString();
+        let inputStringForRender = inputString.replace(/,/g, " ");
 
         return (
             <React.Fragment>

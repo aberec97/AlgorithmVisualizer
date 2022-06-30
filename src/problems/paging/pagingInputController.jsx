@@ -71,7 +71,7 @@ class PagingInputController extends Component {
         </h6>
         <div className="input-manual">
           <label>
-            Queries:
+            Input:
           </label>
           <input type="text" value={this.state.input} onChange={this.changeInput} />
           <label>

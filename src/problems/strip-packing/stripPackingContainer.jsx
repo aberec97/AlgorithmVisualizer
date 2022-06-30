@@ -121,6 +121,11 @@ class StripPackingContainer extends Component {
                         In this problem we have a shelf with a width of 1 and unlimited height. Our task is to place boxes
                         on this shelf while trying to use as little space as possible. Each box has it's own width and height,
                         the overall cost is the total height taken up by these boxes.
+                        <br />
+                        The Next Fit Shelf (r) algorithm opens shelves with different heights. The heights are determined by the different
+                        powers of this  r value which is between 0 and 1. It uses the smallest power that is higher than the next box's height.
+                        A shelf gets closed if it becomes full or the next box in line cannot fit in it. The cost of the algorithm is the total height
+                        the shelves take up.
                     </p>
                 </Description>
                 <StripPackingInput

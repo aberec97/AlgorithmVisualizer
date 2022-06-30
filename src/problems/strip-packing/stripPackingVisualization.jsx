@@ -4,12 +4,14 @@ import './strip-packing.css'
 class StripPackingVisualization extends Component {
     state = {}
     render() {
-        if (!this.props.visualize) return <React.Fragment>Run the algorithm! <br /></React.Fragment>;
+        if (!this.props.visualize) return <React.Fragment><br /></React.Fragment>;
 
         let shelves = this.props.currentHistory;
         let shelvesForRender = [];
 
         if (!shelves) return <React.Fragment>Something went wrong! <br /></React.Fragment>;
+
+
 
         const heightMultiplier = 15;
         const widthMultiplier = 20;
@@ -25,19 +27,20 @@ class StripPackingVisualization extends Component {
                 let heightValue = item[1];
                 let width = widthValue * widthMultiplier + "em";
                 let height = heightValue * heightMultiplier + "em";
-                items.push(<div style={{ width: width, height: height }} className="item">{widthValue}, {heightValue}</div>)
+                items.push(<div key={j} style={{ width: width, height: height }} className="item">{widthValue}, {heightValue}</div>)
             }
 
-            shelvesForRender.push(<div style={{ height: shelfHeight }} className="shelf">{items}</div>)
+            shelvesForRender.push(<div key={i} style={{ height: shelfHeight }} className="shelf">{items}</div>)
         }
+
+        let inputString = this.props.inputArray.map(e => e + ";").toString();
+        let inputStringForRender = inputString.replace(/,/g, " ");
 
         let totalHeight = this.props.cost * heightMultiplier + "em";
 
-        //TODO: az input elemeket mutatni, hogy épp hol vagyunk
-
         return (
             <React.Fragment>
-                Your input was {this.props.inputArray} with an R value of {this.props.rValue}.
+                Your input was {inputStringForRender} with an R value of {this.props.rValue}.
                 <br />
                 <div style={{ height: totalHeight }} className="bay-container">
                     <div style={{ height: totalHeight }} className='loading-bay'>

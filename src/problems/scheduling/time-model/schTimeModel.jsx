@@ -58,6 +58,8 @@ class SchTimeModel extends Component {
                         onSetNumOfMachines={this.handleSetNumOfMachines}>
                     </SchTimeModelInput>
                 </div>
+                <br />
+                Algorithm is not implemented yet!
             </React.Fragment>
         );
     }

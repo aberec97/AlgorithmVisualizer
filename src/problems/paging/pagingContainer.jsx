@@ -52,6 +52,13 @@ class PagingContainer extends Component {
                         elements, in our case numbers. Each element has to be put in the cache, if it fills up, we need to remove
                         an element to make room for the next one. Inserting into the cache costs resources. Our goal is to minimize the
                         number of insertions by efficiently freeing up space.
+                        <br />
+                        The FIFO (First In First Out) algorithm always removes the first element when the cache is full.
+                        <br />
+                        LRU (Least Recently Used) looks for the cache element that was not queried for the longest time.
+                        <br />
+                        LFD (Latest Forward Distance) is an Offline algorithm that looks into the input and checks which cache element
+                        will be needed latest.
                     </p>
                 </Description>
                 <PagingInputController

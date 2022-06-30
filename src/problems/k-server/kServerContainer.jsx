@@ -48,6 +48,12 @@ class KServerContainer extends Component {
                         but if there is no server, we have to move one to the requested location. The cost of moving a server is the distance between
                         it's current location and the request's location. This distance can be measured as d(x, y) = |x - y|. Our goal is to handle
                         all requests with the least possible server movements.
+                        <br />
+                        The DC (Double Coverage) algorithm moves 2 servers in the direction of the request if the request is between 2 servers. Otherwise it
+                        moves only one.
+                        <br />
+                        The Lazy DC runs DC on the next request and checks which server would end up in the end at the request's location and moves only that
+                        server. This usually reduces the cost because we move only 1 server instead of 2.
                     </p>
                 </Description>
                 <KServerInput
