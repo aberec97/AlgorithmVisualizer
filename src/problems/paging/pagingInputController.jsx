@@ -1,6 +1,8 @@
 import './paging.css'
 import { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import SimpleInput from '../../common/SimpleInput';
+import SimpleInputController from '../../common/SimpleInputController';
 
 class PagingInputController extends Component {
   state = {
@@ -96,6 +98,7 @@ class PagingInputController extends Component {
           <Button variant="secondary" className='random-gen'
             onClick={this.generateRandomInput}>Generate random input</Button>
         </div>
+        <SimpleInputController></SimpleInputController>
       </div>
     );
   }
