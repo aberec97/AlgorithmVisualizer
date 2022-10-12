@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import NumberInput from './NumberInput';
-import SimpleInput from './SimpleInput';
+import NumberInput from './numberInput';
+import SimpleInput from './simpleInput';
 import './common-styles/common.css'
 
 class SimpleInputController extends Component {
