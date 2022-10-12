@@ -98,6 +98,7 @@ class PagingInputController extends Component {
             onClick={this.generateRandomInput}>Generate random input</Button>
         </div>
         <SimpleInputController></SimpleInputController>
+
       </div>
     );
   }

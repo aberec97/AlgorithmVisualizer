@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NumberInput from './numberInput';
 import SimpleInput from './simpleInput';
 import './common-styles/common.css'
+import RangeSizeRandomGenerator from './rangeSizeRandomGenerator';
 
 class SimpleInputController extends Component {
     state = {
@@ -79,6 +80,10 @@ class SimpleInputController extends Component {
                     <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 </div>
                 {validationMessage}
+                <RangeSizeRandomGenerator
+                    changeInput={this.changeInput}
+                    changeInputValidity={this.changeInputValidity}>
+                </RangeSizeRandomGenerator>
             </div>
         );
     }

@@ -36,18 +36,18 @@ class RangeSizeRandomGenerator extends Component {
             let rnd = this.getRndInteger(parseInt(this.state.from, 10), parseInt(this.state.to, 10));
             input.push(rnd);
         }
-        this.setState({ input: input })
+        this.props.changeInput(input);
+        this.props.changeInputValidity(true);
     }
 
     render() {
         return (
-            <div><h6>
-                You can also generate a random input.
-            </h6>
-                <div className='input-random'>
-                    <label>
-                        Range: [
-                    </label>
+            <div>
+                <h6>
+                    You can also generate a random input.
+                </h6>
+                <div>
+                    <label>Range: [</label>
                     <input type="number" value={this.state.from} onChange={this.changeFrom} className='cache' />
                     <label>;</label>
                     <input type="number" value={this.state.to} onChange={this.changeTo} className='cache' />
@@ -56,7 +56,9 @@ class RangeSizeRandomGenerator extends Component {
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                     <Button variant="secondary" className='random-gen'
                         onClick={this.generateRandomInput}>Generate random input</Button>
-                </div></div>);
+                </div>
+            </div>
+        );
     }
 }
 
