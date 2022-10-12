@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { validateNumberInput } from './utilities';
+import './common-styles/common.css';
 
 class NumberInput extends Component {
     changeCache = (event) => {
@@ -9,9 +10,8 @@ class NumberInput extends Component {
     }
 
     render() {
-        let isInputValid = this.props.validity ? <div><br /></div> : <div className='invalid-field'>The input is invalid!</div>;
         return (
-            <div>
+            <div className='inputField'>
                 <label>{this.props.label}</label>
                 <input
                     type="number"
@@ -19,7 +19,6 @@ class NumberInput extends Component {
                     onChange={this.changeCache}
                     onKeyDown={(event) => event.key === 'e' && event.preventDefault()}
                     className='cache' />
-                {isInputValid}
             </div>
         );
     }

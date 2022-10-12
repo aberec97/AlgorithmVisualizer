@@ -8,7 +8,8 @@ class SimpleInputController extends Component {
         input: '',
         cache: '',
         isInputValid: false,
-        isCacheValid: false
+        isCacheValid: false,
+        inputIsReady: true
     }
 
     changeInput = (value) => {
@@ -36,21 +37,25 @@ class SimpleInputController extends Component {
     }
 
     readInput = () => {
-        if (this.state.isInputValid) {
+        if (this.state.isInputValid && this.state.isCacheValid) {
             const inputStr = this.state.input.toString();
             const withoutCommas = inputStr.replace(/,/g, " ");
             const inputArray = Array.from(withoutCommas.split(" "));
             const onlyNumbers = inputArray.filter(Number);
             console.log("The final input is: ", onlyNumbers);
             console.log("The final cache is: ", this.state.cache);
+            this.setState({ inputIsReady: true });
             //this.props.onSetInputArray(onlyNumbers);
             //this.props.onSetCacheSize(this.state.cache);
         } else {
+            this.setState({ inputIsReady: false });
             return;
         }
     };
 
     render() {
+        let validationMessage = this.state.inputIsReady ? <br /> : <div className='invalid-field'>Invalid input!</div>;
+
         return (
             <div>
                 <h4>
@@ -73,6 +78,7 @@ class SimpleInputController extends Component {
                     </NumberInput>
                     <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 </div>
+                {validationMessage}
             </div>
         );
     }

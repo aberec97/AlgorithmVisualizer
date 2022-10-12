@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './common-styles/common.css';
 import { validateSimpleInput } from './utilities';
 
@@ -12,13 +12,10 @@ class SimpleInput extends Component {
     }
 
     render() {
-        let isInputValid = this.props.validity ? <div><br /></div> : <div className='invalid-field'>The input is invalid!</div>;
-
         return (
-            <div>
+            <div className='inputField'>
                 <label>{this.props.label}</label>
                 <input value={this.props.input} onChange={this.changeInput}></input>
-                {isInputValid}
             </div>
         );
     }

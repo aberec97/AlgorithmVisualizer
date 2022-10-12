@@ -1,7 +1,6 @@
 import './paging.css'
 import { Component } from 'react';
 import Button from 'react-bootstrap/Button';
-import SimpleInput from '../../common/SimpleInput';
 import SimpleInputController from '../../common/SimpleInputController';
 
 class PagingInputController extends Component {
