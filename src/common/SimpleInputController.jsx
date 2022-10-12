@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NumberInput from './NumberInput';
 import SimpleInput from './SimpleInput';
+import './common-styles/common.css'
 
 class SimpleInputController extends Component {
     state = {
@@ -50,30 +51,28 @@ class SimpleInputController extends Component {
     };
 
     render() {
-        let finalInput = this.state.isInputValid ? this.state.input : "Input is invalid!";
-        let finalCache = this.state.isInputValid ? this.state.cache : "Input is invalid!";
-
         return (
             <div>
                 <h4>
                     Simple input controller
                 </h4>
-                <div>Input: {finalInput} Cache size: {finalCache} </div>
-                <SimpleInput
-                    label='Input:'
-                    input={this.state.input}
-                    changeInput={this.changeInput}
-                    changeInputValidity={this.changeInputValidity}
-                    validity={this.state.isInputValid}>
-                </SimpleInput>
-                <NumberInput
-                    label='Cache size:'
-                    cache={this.state.cache}
-                    changeCache={this.changeCache}
-                    changeCacheValidity={this.changeCacheValidity}
-                    validity={this.state.isCacheValid}>
-                </NumberInput>
-                <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                <div className='input-manual'>
+                    <SimpleInput
+                        label='Input:'
+                        input={this.state.input}
+                        changeInput={this.changeInput}
+                        changeInputValidity={this.changeInputValidity}
+                        validity={this.state.isInputValid}>
+                    </SimpleInput>
+                    <NumberInput
+                        label='Cache size:'
+                        cache={this.state.cache}
+                        changeCache={this.changeCache}
+                        changeCacheValidity={this.changeCacheValidity}
+                        validity={this.state.isCacheValid}>
+                    </NumberInput>
+                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                </div>
             </div>
         );
     }
