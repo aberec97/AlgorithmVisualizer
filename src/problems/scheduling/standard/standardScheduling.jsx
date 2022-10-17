@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Description from '../../../common/description';
-import PagingInputController from '../../paging/pagingInputController';
+import SimpleInputController from '../../../common/simpleInputController';
 import './../scheduling.css';
 import StandardSchVisualization from './standardSchVisualization';
 import Button from 'react-bootstrap/Button';
@@ -92,11 +92,14 @@ class StandardScheduling extends Component {
                         always schedules the next job to the first machine available.
                     </p>
                 </Description>
-                <PagingInputController
+                <SimpleInputController
                     onSetInputArray={this.handleSetInputArray}
                     onSetCacheSize={this.handleSetNumOfMachines}
-                    label={"Number of machines:"}>
-                </PagingInputController>
+                    inputLabel={"Input:"}
+                    cacheLabel={"Number of machines:"}
+                    inputDescription={"Provide an input with whole numbers, for separation use commas (\",\") or spaces (\" \")!"}
+                    randomGenDescription={"You can also generate a random input."}>
+                </SimpleInputController>
                 <br />
                 <button
                     className='btn btn-success'

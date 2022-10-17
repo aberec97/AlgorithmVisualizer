@@ -4,6 +4,7 @@ import PagingInputController from './pagingInputController';
 import ButtonHolder from '../../common/buttonHolder';
 import './paging.css'
 import PagingAlgorithm from './algorithms/pagingAlgorithm';
+import SimpleInputController from '../../common/simpleInputController';
 
 class PagingContainer extends Component {
     state = {
@@ -61,11 +62,14 @@ class PagingContainer extends Component {
                         will be needed latest.
                     </p>
                 </Description>
-                <PagingInputController
+                <SimpleInputController
                     onSetInputArray={this.handleSetInputArray}
                     onSetCacheSize={this.handleSetCacheSize}
-                    label={"Cache size:"}>
-                </PagingInputController>
+                    inputLabel={"Input:"}
+                    cacheLabel={"Cache size:"}
+                    inputDescription={"Provide an input with whole numbers, for separation use commas (\",\") or spaces (\" \")!"}
+                    randomGenDescription={"You can also generate a random input."}>
+                </SimpleInputController>
                 <div className='algorithm-chooser'>
                     <h5>Choose an algorithm:</h5>
                     <ButtonHolder buttons={algorithms} onSelect={this.handleAlgSelect}></ButtonHolder>

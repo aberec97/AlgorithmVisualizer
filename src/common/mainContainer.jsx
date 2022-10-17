@@ -21,14 +21,14 @@ class MainContainer extends Component {
         ];
 
         return (<React.Fragment>
-            <h1>AlgorithmVisualizer</h1>
+            <h1>Online algorithm visualizer</h1>
             <p>
                 Welcome! Start by selecting a problem, then choose an algorithm to solve
                 it!
             </p>
             <div className="problem-select">
                 <TitleAndButtons
-                    title="Online Algorithm Problems"
+                    title="Common Problems:"
                     buttons={onlineAlgs}
                     onSelect={this.handleProblemSelect}
                 ></TitleAndButtons>

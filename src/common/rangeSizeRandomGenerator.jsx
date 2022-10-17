@@ -46,7 +46,7 @@ class RangeSizeRandomGenerator extends Component {
         return (
             <div>
                 <h6>
-                    You can also generate a random input.
+                    {this.props.randomGenDescription}
                 </h6>
                 <div>
                     <label>Range: [</label>

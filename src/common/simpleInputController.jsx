@@ -43,11 +43,9 @@ class SimpleInputController extends Component {
             const withoutCommas = inputStr.replace(/,/g, " ");
             const inputArray = Array.from(withoutCommas.split(" "));
             const onlyNumbers = inputArray.filter(Number);
-            console.log("The final input is: ", onlyNumbers);
-            console.log("The final cache is: ", this.state.cache);
             this.setState({ inputIsReady: true });
-            //this.props.onSetInputArray(onlyNumbers);
-            //this.props.onSetCacheSize(this.state.cache);
+            this.props.onSetInputArray(onlyNumbers);
+            this.props.onSetCacheSize(this.state.cache);
         } else {
             this.setState({ inputIsReady: false });
             return;
@@ -59,19 +57,19 @@ class SimpleInputController extends Component {
 
         return (
             <div>
-                <h4>
-                    Simple input controller
-                </h4>
+                <h6>
+                    {this.props.inputDescription}
+                </h6>
                 <div className='input-manual'>
                     <SimpleInput
-                        label='Input:'
+                        label={this.props.inputLabel}
                         input={this.state.input}
                         changeInput={this.changeInput}
                         changeInputValidity={this.changeInputValidity}
                         validity={this.state.isInputValid}>
                     </SimpleInput>
                     <NumberInput
-                        label='Cache size:'
+                        label={this.props.cacheLabel}
                         cache={this.state.cache}
                         changeCache={this.changeCache}
                         changeCacheValidity={this.changeCacheValidity}
@@ -82,7 +80,8 @@ class SimpleInputController extends Component {
                 {validationMessage}
                 <RangeSizeRandomGenerator
                     changeInput={this.changeInput}
-                    changeInputValidity={this.changeInputValidity}>
+                    changeInputValidity={this.changeInputValidity}
+                    randomGenDescription={this.props.randomGenDescription}>
                 </RangeSizeRandomGenerator>
             </div>
         );
