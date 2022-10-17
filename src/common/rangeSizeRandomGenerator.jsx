@@ -36,8 +36,10 @@ class RangeSizeRandomGenerator extends Component {
             let rnd = this.getRndInteger(parseInt(this.state.from, 10), parseInt(this.state.to, 10));
             input.push(rnd);
         }
-        this.props.changeInput(input);
-        this.props.changeInputValidity(true);
+        if (this.state.number > 0) {
+            this.props.changeInput(input);
+            this.props.changeInputValidity(true);
+        }
     }
 
     render() {
