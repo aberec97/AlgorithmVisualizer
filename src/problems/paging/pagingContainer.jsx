@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Description from '../../common/description';
-import PagingInputController from './pagingInputController';
 import ButtonHolder from '../../common/buttonHolder';
 import './paging.css'
 import PagingAlgorithm from './algorithms/pagingAlgorithm';

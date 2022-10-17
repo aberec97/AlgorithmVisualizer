@@ -49,15 +49,15 @@ class RangeSizeRandomGenerator extends Component {
                     {this.props.randomGenDescription}
                 </h6>
                 <div>
-                    <label>Range: [</label>
+                    <label>{this.props.label1} [</label>
                     <input type="number" value={this.state.from} onChange={this.changeFrom} className='cache' />
                     <label>;</label>
                     <input type="number" value={this.state.to} onChange={this.changeTo} className='cache' />
                     <label>]</label>
-                    <label>Size:</label>
+                    <label>{this.props.label2}</label>
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );
