@@ -36,6 +36,10 @@ class DependentSchInput extends Component {
     }
 
     readInput = () => {
+        if (!this.state.isInputValid || !this.state.isMachineSpeedsValid) {
+            this.setState({ inputIsReady: false });
+            return;
+        }
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
@@ -47,6 +51,7 @@ class DependentSchInput extends Component {
         const onlyNumbersSpeed = inputArraySpeed.filter(Number);
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetMachineSpeeds(onlyNumbersSpeed);
+        this.setState({ inputIsReady: true });
     };
 
     render() {
