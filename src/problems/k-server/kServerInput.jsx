@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import SimpleInput from '../../common/simpleInput';
 
 class KServerInput extends Component {
     state = {
         input: '',
         startConfig: '',
+        isStartConfigValid: false,
+        isInputValid: false,
         k: '',
         from: '',
         to: '',
         numOfRequests: ''
     }
 
-    changeInput = (event) => {
+    changeInput = (value) => {
         this.setState({
-            input: event.target.value
+            input: value
         });
     }
 
-    changeStartConfig = (event) => {
+    changeStartConfig = (value) => {
         this.setState({
-            startConfig: event.target.value
+            startConfig: value
+        });
+    }
+
+    changeInputValidity = (isValid) => {
+        this.setState({
+            isInputValid: isValid
+        });
+    }
+
+    changeStartConfigValidity = (isValid) => {
+        this.setState({
+            isStartConfigValid: isValid
         });
     }
 
@@ -88,17 +103,23 @@ class KServerInput extends Component {
                     Provide a starting configuration and an input with whole numbers, for separation use commas (",") or spaces (" ")!
                     The starting configuration will determine the number of servers.
                 </h6>
-                <div className="input-manual">
-                    <label>
-                        Starting configuration:
-                    </label>
-                    <input type="text" value={this.state.startConfig} onChange={this.changeStartConfig} />
-                    <label>
-                        Requests:
-                    </label>
-                    <input type="text" value={this.state.input} onChange={this.changeInput} />
-                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
-                </div>
+                <SimpleInput
+                    label={"Starting configuration:"}
+                    input={this.state.startConfig}
+                    changeInput={this.changeStartConfig}
+                    changeInputValidity={this.changeStartConfigValidity}
+                    validity={this.state.isStartConfigValid}
+                    acceptedCharacters={[' ', ',']}>
+                </SimpleInput>
+                <SimpleInput
+                    label={"Requests:"}
+                    input={this.state.input}
+                    changeInput={this.changeInput}
+                    changeInputValidity={this.changeInputValidity}
+                    validity={this.state.isInputValid}
+                    acceptedCharacters={[' ', ',']}>
+                </SimpleInput>
+                <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 <h6>
                     You can also generate a random input.
                 </h6>
@@ -115,7 +136,7 @@ class KServerInput extends Component {
                     <label>Number of requests:</label>
                     <input type="number" value={this.state.numOfRequests} onChange={this.changeNumOfRequests} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );

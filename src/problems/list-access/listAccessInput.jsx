@@ -1,23 +1,40 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import SimpleInput from '../../common/simpleInput';
+import NumberInput from '../../common/numberInput';
 
 class ListAccessInput extends Component {
     state = {
         input: '',
         length: '',
+        isInputValid: false,
+        isLengthValid: false,
+        inputIsReady: true,
         size: '',
         number: ''
     }
 
-    changeInput = (event) => {
+    changeInput = (value) => {
         this.setState({
-            input: event.target.value
+            input: value
         });
     }
 
-    changeLength = (event) => {
+    changeLength = (value) => {
         this.setState({
-            length: event.target.value
+            length: value
+        });
+    }
+
+    changeInputValidity = (isValid) => {
+        this.setState({
+            isInputValid: isValid
+        });
+    }
+
+    changeLengthValidity = (isValid) => {
+        this.setState({
+            isLengthValid: isValid
         });
     }
 
@@ -41,6 +58,10 @@ class ListAccessInput extends Component {
     }
 
     readInput = () => {
+        if (!this.state.isInputValid || !this.state.isLengthValid) {
+            this.setState({ inputIsReady: false });
+            return;
+        }
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
@@ -48,9 +69,12 @@ class ListAccessInput extends Component {
         console.log(onlyNumbers);
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetCacheSize(this.state.length);
+        this.setState({ inputIsReady: true });
     };
 
     render() {
+        let validationMessage = this.state.inputIsReady ? <br /> : <div className='invalid-field'>Invalid input!</div>;
+
         return (
             <div>
                 <h6>
@@ -58,17 +82,24 @@ class ListAccessInput extends Component {
                     The length of the list will determine the linked list,
                     for example if the length is 3, the list will be: 1 -&gt; 2 -&gt; 3.
                 </h6>
-                <div className="input-manual">
-                    <label>
-                        Queries:
-                    </label>
-                    <input type="text" value={this.state.input} onChange={this.changeInput} />
-                    <label>
-                        {this.props.label}
-                    </label>
-                    <input type="number" value={this.state.length} onChange={this.changeLength} className='cache' />
-                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
-                </div>
+                <SimpleInput
+                    label={"Queries:"}
+                    input={this.state.input}
+                    changeInput={this.changeInput}
+                    changeInputValidity={this.changeInputValidity}
+                    validity={this.state.isInputValid}
+                    accpetedCharacters={[',', ' ']}
+                >
+                </SimpleInput>
+                <NumberInput
+                    label={"Length:"}
+                    cache={this.state.length}
+                    changeCache={this.changeLength}
+                    changeCacheValidity={this.changeLengthValidity}
+                    validity={this.state.isLengthValid}>
+                </NumberInput>
+                <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                {validationMessage}
                 <h6>
                     You can also generate a random input.
                 </h6>
@@ -78,7 +109,7 @@ class ListAccessInput extends Component {
                     <label>{this.props.label}</label>
                     <input type="number" value={this.state.length} onChange={this.changeLength} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );

@@ -68,14 +68,16 @@ class DependentSchInput extends Component {
                     input={this.state.input}
                     changeInput={this.changeInput}
                     changeInputValidity={this.changeInputValidity}
-                    validity={this.state.isInputValid}>
+                    validity={this.state.isInputValid}
+                    acceptedCharacters={[',', ' ']}>
                 </SimpleInput>
                 <SimpleInput
                     label={"Speed of machines:"}
                     input={this.state.machineSpeeds}
                     changeInput={this.changeMachineSpeeds}
                     changeInputValidity={this.changeMachineSpeedsValidity}
-                    validity={this.state.isMachineSpeedsValid}>
+                    validity={this.state.isMachineSpeedsValid}
+                    acceptedCharacters={[',', ' ']}>
                 </SimpleInput>
                 <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 {validationMessage}

@@ -98,7 +98,8 @@ class StandardScheduling extends Component {
                     inputLabel={"Input:"}
                     cacheLabel={"Number of machines:"}
                     inputDescription={"Provide an input with whole numbers, for separation use commas (\",\") or spaces (\" \")!"}
-                    randomGenDescription={"You can also generate a random input."}>
+                    randomGenDescription={"You can also generate a random input."}
+                    acceptedCharacters={[',', ' ']}>
                 </SimpleInputController>
                 <br />
                 <button

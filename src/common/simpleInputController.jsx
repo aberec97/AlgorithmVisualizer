@@ -66,7 +66,8 @@ class SimpleInputController extends Component {
                         input={this.state.input}
                         changeInput={this.changeInput}
                         changeInputValidity={this.changeInputValidity}
-                        validity={this.state.isInputValid}>
+                        validity={this.state.isInputValid}
+                        acceptedCharacters={this.props.acceptedCharacters}>
                     </SimpleInput>
                     <NumberInput
                         label={this.props.cacheLabel}

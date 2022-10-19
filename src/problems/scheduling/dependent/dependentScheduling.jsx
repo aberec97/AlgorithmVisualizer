@@ -97,7 +97,7 @@ class DependentScheduling extends Component {
                     <p className="description">
                         In this variant of the scheduling problem the execution times of the jobs are the same but the speed of the machines can differ.
                         The jobs can be represented as numbers and for each machine we have to specify a speed.
-                        The LIST algorithm for dependent machines takes into consideration how fast the upcoming job can be completed on the different machines
+                        The LIST algorithm for related machines takes into consideration how fast the upcoming job can be completed on the different machines
                         and how big the makespan would be.
                     </p>
                 </Description>

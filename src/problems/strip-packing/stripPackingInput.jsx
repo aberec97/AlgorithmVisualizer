@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import SimpleInput from '../../common/simpleInput';
 
 class StipPackingInput extends Component {
     state = {
         input: '',
         number: '',
+        isInputValid: false,
+        isInputReady: true,
         r: ''
     }
 
-    changeInput = (event) => {
+    changeInput = (value) => {
         this.setState({
-            input: event.target.value
+            input: value
+        });
+    }
+
+    changeInputValidity = (isValid) => {
+        this.setState({
+            isInputValid: isValid
         });
     }
 
@@ -59,17 +68,20 @@ class StipPackingInput extends Component {
                     For each item, you need to give a width and a height. Example input: 0.1, 0.2; 0.3, 0.4.
                     The R value has to be between 0 and 1 as well.
                 </h6>
-                <div className="input-manual">
-                    <label>
-                        Input:
-                    </label>
-                    <input type="text" value={this.state.input} onChange={this.changeInput} />
-                    <label>
-                        R:
-                    </label>
-                    <input type="number" value={this.state.r} onChange={this.changeR} className='cache' />
-                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
-                </div>
+                <SimpleInput
+                    label={"Input:"}
+                    input={this.state.input}
+                    changeInput={this.changeInput}
+                    changeInputValidity={this.changeInputValidity}
+                    validity={this.state.isInputValid}
+                    acceptedCharacters={['.', ';', ',', ' ']}
+                >
+                </SimpleInput>
+                <label>
+                    R:
+                </label>
+                <input type="number" value={this.state.r} onChange={this.changeR} className='cache' />
+                <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 <h6>
                     You can also generate a random input.
                 </h6>
@@ -77,7 +89,7 @@ class StipPackingInput extends Component {
                     <label>Number of elements:</label>
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );

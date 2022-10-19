@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import NumberInput from '../../../common/numberInput';
+import SimpleInput from '../../../common/simpleInput';
 
 class SchTimeModelInput extends Component {
     state = {
         input: '',
         machines: undefined,
+        isInputValid: false,
+        isMachinesValid: false,
+        isInputReady: true,
         from: '',
         to: '',
         number: '',
         warning: <div></div>
     };
 
-    changeInput = (event) => {
+    changeInput = (value) => {
         this.setState({
-            input: event.target.value
+            input: value
         });
     }
 
-    changeNumOfMachines = (event) => {
+    changeNumOfMachines = (value) => {
         this.setState({
-            machines: event.target.value
+            machines: value
+        });
+    }
+
+    changeInputValidity = (isValid) => {
+        this.setState({
+            isInputValid: isValid
+        });
+    }
+
+    changeMachinesValidity = (isValid) => {
+        this.setState({
+            isMachinesValid: isValid
         });
     }
 
@@ -63,6 +80,10 @@ class SchTimeModelInput extends Component {
     }
 
     readInput = () => {
+        if (!this.state.isInputValid || !this.state.isMachinesValid) {
+            this.setState({ isInputReady: false });
+            return;
+        }
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
@@ -70,26 +91,35 @@ class SchTimeModelInput extends Component {
         const onlyNumbers = jobs.map(j => j.filter(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetNumOfMachines(this.state.machines);
+        this.setState({ isInputReady: true });
     };
 
     render() {
+        let validationMessage = this.state.isInputReady ? <br /> : <div className='invalid-field'>Invalid input!</div>
+
         return (
             <React.Fragment>
                 <h6>
                     Provide an input with whole numbers! Use this format for jobs and their timestamps: x,y and semicolon (";")
                     between different jobs. For example: 1,2; 3,4. You can use spaces (" ") instead of commas (",").
                 </h6>
-                <div className="input-manual">
-                    <label>
-                        Input:
-                    </label>
-                    <input type="text" value={this.state.input} onChange={this.changeInput} />
-                    <label>
-                        Number of machines:
-                    </label>
-                    <input type="number" value={this.state.machines} onChange={this.changeNumOfMachines} className='cache' />
-                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
-                </div>
+                <SimpleInput
+                    label={"Input:"}
+                    changeInput={this.changeInput}
+                    input={this.state.input}
+                    changeInputValidity={this.changeInputValidity}
+                    validity={this.state.isInputValid}
+                    acceptedCharacters={[',', ' ', ';']}
+                ></SimpleInput>
+                <NumberInput
+                    label={"Number of machines:"}
+                    cache={this.state.machines}
+                    changeCache={this.changeNumOfMachines}
+                    changeCacheValidity={this.changeMachinesValidity}
+                    validity={this.state.isMachinesValid}
+                ></NumberInput>
+                <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                {validationMessage}
                 <h6>
                     You can also generate a random input.
                 </h6>
@@ -104,7 +134,7 @@ class SchTimeModelInput extends Component {
                     <label>Size:</label>
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
                 {this.state.warning}
             </React.Fragment>);

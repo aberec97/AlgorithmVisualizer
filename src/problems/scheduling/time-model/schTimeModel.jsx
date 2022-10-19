@@ -47,7 +47,7 @@ class SchTimeModel extends Component {
                 <Description>
                     <p className="description">
                         With the time model, each job has a timespan that tells us when the given job is received.
-                        Multiple jobs can arrive at the same time, we can use different strategies to handle them.
+                        Multiple jobs can arrive at the same time and we can use different strategies to handle them.
                         The algorithms we can use here are INTV (Interval of Time) and Online LPT (Longest Processing Time).
                         The makespan is the longest working machine's finishing time.
                     </p>

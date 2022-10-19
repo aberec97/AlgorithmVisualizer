@@ -88,8 +88,8 @@ class IndependentScheduling extends Component {
             <Description>
                 <p className="description">
                     In this variant of the scheduling problem the execution times of the jobs can differ on every machine.
-                    For example it is possible for a job to take 1 minute on the first machine and 2 on the second, we would represend
-                    this as (1,2). The LIST algorithm for independent machines takes into consideration these different runtimes when determining
+                    For example it is possible for a job to take 1 minute on the first machine and 2 on the second, we would represent
+                    this as (1,2). The LIST algorithm for unrelated machines takes into consideration these different runtimes when determining
                     the loads. When a new job comes, it schedules it for the machine that would least increase the makespan.
                 </p>
             </Description>

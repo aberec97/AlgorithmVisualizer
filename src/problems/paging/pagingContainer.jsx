@@ -67,7 +67,8 @@ class PagingContainer extends Component {
                     inputLabel={"Input:"}
                     cacheLabel={"Cache size:"}
                     inputDescription={"Provide an input with whole numbers, for separation use commas (\",\") or spaces (\" \")!"}
-                    randomGenDescription={"You can also generate a random input."}>
+                    randomGenDescription={"You can also generate a random input."}
+                    acceptedCharacters={[',', ' ']}>
                 </SimpleInputController>
                 <div className='algorithm-chooser'>
                     <h5>Choose an algorithm:</h5>

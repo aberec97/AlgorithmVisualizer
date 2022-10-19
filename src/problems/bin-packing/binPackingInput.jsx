@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import SimpleInput from '../../common/simpleInput';
 
 class BinPackingInput extends Component {
     state = {
         input: '',
-        number: ''
+        number: '',
+        isInputValid: false,
+        inputIsReady: true
     }
 
-    changeInput = (event) => {
+    changeInput = (value) => {
         this.setState({
-            input: event.target.value
+            input: value
         });
     }
 
     changeNumber = (event) => {
         this.setState({
             number: event.target.value
+        });
+    }
+
+    changeInputValidity = (isValid) => {
+        this.setState({
+            isInputValid: isValid
         });
     }
 
@@ -33,27 +42,36 @@ class BinPackingInput extends Component {
     }
 
     readInput = () => {
+        if (!this.state.isInputValid) {
+            this.setState({ inputIsReady: false });
+            return;
+        }
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
         const onlyNumbers = inputArray.filter(Number);
-        console.log(onlyNumbers);
         this.props.onSetInputArray(onlyNumbers);
+        this.setState({ inputIsReady: true });
     };
 
     render() {
+        let validationMessage = this.state.inputIsReady ? <br /> : <div className='invalid-field'>Invalid input!</div>;
+
         return (
             <div>
                 <h6>
                     Provide an input with numbers from 0 to 1, for separation use commas (",") or spaces (" ")! Example input: 0.1, 0.2, 0.3
                 </h6>
-                <div className="input-manual">
-                    <label>
-                        Input:
-                    </label>
-                    <input type="text" value={this.state.input} onChange={this.changeInput} />
-                    <button className='btn btn-success' onClick={this.readInput}>Save</button>
-                </div>
+                <SimpleInput
+                    label={"Input:"}
+                    input={this.state.input}
+                    changeInput={this.changeInput}
+                    changeInputValidity={this.changeInputValidity}
+                    validity={this.state.isInputValid}
+                    acceptedCharacters={['.', ',', ' ']}>
+                </SimpleInput>
+                <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                {validationMessage}
                 <h6>
                     You can also generate a random input.
                 </h6>
@@ -61,7 +79,7 @@ class BinPackingInput extends Component {
                     <label>Number of elements:</label>
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
                     <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate random input</Button>
+                        onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );
