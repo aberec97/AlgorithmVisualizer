@@ -6,38 +6,42 @@ class StripPackingVisualization extends Component {
     render() {
         if (!this.props.visualize) return <React.Fragment><br /></React.Fragment>;
 
-        let shelves = this.props.currentHistory;
+        let history = this.props.history;
         let shelvesForRender = [];
 
-        if (!shelves) return <React.Fragment>Something went wrong! <br /></React.Fragment>;
+        if (!history) return <React.Fragment>Something went wrong! <br /></React.Fragment>;
 
         if (!this.props.inputArray) return <React.Fragment>Provide an input! <br /></React.Fragment>;
 
         const heightMultiplier = 15;
         const widthMultiplier = 20;
 
-        for (let i = 0; i < shelves.length; i++) {
-            let shelf = shelves[i];
-            let shelfHeight = shelf['height'] * heightMultiplier + "em";
+        let itemsToShelves = [];
 
-            let items = [];
-            for (let j = 0; j < shelf['items'].length; j++) {
-                let item = shelf['items'][j];
-                let widthValue = item[0];
-                let heightValue = item[1];
-                let width = widthValue * widthMultiplier + "em";
-                let height = heightValue * heightMultiplier + "em";
-                items.push(<div key={j} style={{ width: width, height: height }} className="item">{widthValue}, {heightValue}</div>)
+        for (let i = 1; i <= this.props.currentStep; i++) {
+            let currentHistory = history.get(i);
+
+            let index = currentHistory['shelfIndex'];
+            let itemWidth = currentHistory['item'][0];
+            let itemHeight = currentHistory['item'][1];
+            let shelfHeightValue = currentHistory['shelfHeight'];
+            let shelfHeight = shelfHeightValue * heightMultiplier + "em";
+            let width = itemWidth * widthMultiplier + "em";
+            let height = itemHeight * heightMultiplier + "em";
+
+            if (itemsToShelves[index] === undefined) {
+                itemsToShelves[index] = [<div key={i} style={{ width: width, height: height }} className="item">{itemWidth}, {itemHeight}</div>];
+            } else {
+                itemsToShelves[index].push(<div key={i} style={{ width: width, height: height }} className="item">{itemWidth}, {itemHeight}</div>);
             }
 
-            shelvesForRender.push(<div key={i} style={{ height: shelfHeight }} className="shelf">{items}</div>)
+            shelvesForRender[index] = <div key={i}><label>{shelfHeightValue}</label><div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}</div></div>;
         }
 
         let inputString = this.props.inputArray.map(e => e + ";").toString();
         let inputStringForRender = inputString.replace(/,/g, " ");
 
         let totalHeight = this.props.cost * heightMultiplier + "em";
-
         return (
             <React.Fragment>
                 Your input was {inputStringForRender} with an R value of {this.props.rValue}.

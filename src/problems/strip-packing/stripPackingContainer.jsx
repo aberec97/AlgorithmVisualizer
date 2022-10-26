@@ -46,16 +46,9 @@ class StripPackingContainer extends Component {
 
     solveWithNextFitShelf(input, rValue) {
         let shelves = [];
-        shelves.push({
-            fullness: 0,
-            height: 1,
-            items: [],
-            open: true
-        });
-
-        let cost = 1;
+        let cost = 0;
         let history = new Map();
-        history.set(0, shelves.slice());
+        history.set(0, {});
 
         for (let i = 0; i < input.length; i++) {
             let power = Number(0);
@@ -68,37 +61,51 @@ class StripPackingContainer extends Component {
             }
             let powerToRaiseOn = power === 0 ? 0 : power - 1;
             higherNumber = Math.pow(rValue, powerToRaiseOn);
-            for (let j = 0; j < shelves.length; j++) {
-                let shelf = shelves[j];
-                let lastShelfIndex = shelves.length - 1;
-                if (!shelf.open && j < lastShelfIndex) {
-                    continue;
-                }
-                else if (shelf.open && shelf.height > higherNumber && j < lastShelfIndex) {
-                    continue;
-                }
-                else if (shelf.open && shelf.height < higherNumber && j < lastShelfIndex) {
-                    continue;
-                }
-                else if (shelf.open && shelf.height === higherNumber && Number(shelf.fullness + itemWidth) <= 1) {
-                    shelf.items.push(item);
-                    shelf.fullness += itemWidth;
-                    history.set(i + 1, shelves.slice());
-                    break;
-                }
-                else {
-                    if (shelf.open && shelf.height === higherNumber) shelf.open = false;
-                    shelves.push({
-                        fullness: itemWidth,
-                        height: higherNumber,
-                        items: [
-                            item
-                        ],
-                        open: true
-                    });
-                    cost += higherNumber;
-                    history.set(i + 1, shelves.slice());
-                    break;
+            if (shelves.length === 0) {
+                shelves.push({
+                    fullness: itemWidth,
+                    height: higherNumber,
+                    items: [
+                        item
+                    ],
+                    open: true
+                });
+                cost += higherNumber;
+                history.set(i + 1, { item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber, newShelf: true });
+            }
+            else {
+                for (let j = 0; j < shelves.length; j++) {
+                    let shelf = shelves[j];
+                    let lastShelfIndex = shelves.length - 1;
+                    if (!shelf.open && j < lastShelfIndex) {
+                        continue;
+                    }
+                    else if (shelf.open && shelf.height > higherNumber && j < lastShelfIndex) {
+                        continue;
+                    }
+                    else if (shelf.open && shelf.height < higherNumber && j < lastShelfIndex) {
+                        continue;
+                    }
+                    else if (shelf.open && shelf.height === higherNumber && Number(shelf.fullness + itemWidth) <= 1) {
+                        shelf.items.push(item);
+                        shelf.fullness += itemWidth;
+                        history.set(i + 1, { item: item, shelfIndex: j, shelfHeight: higherNumber, newShelf: false });
+                        break;
+                    }
+                    else {
+                        if (shelf.open && shelf.height === higherNumber) shelf.open = false;
+                        shelves.push({
+                            fullness: itemWidth,
+                            height: higherNumber,
+                            items: [
+                                item
+                            ],
+                            open: true
+                        });
+                        cost += higherNumber;
+                        history.set(i + 1, { item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber, newShelf: true });
+                        break;
+                    }
                 }
             }
         }
@@ -107,11 +114,6 @@ class StripPackingContainer extends Component {
     }
 
     render() {
-        let currentHistory;
-
-        if (this.state.cost > 0) {
-            currentHistory = this.state.history.get(this.state.currentStep);
-        }
 
         return (
             <React.Fragment>
@@ -144,7 +146,7 @@ class StripPackingContainer extends Component {
                     inputArray={this.state.inputArray}
                     rValue={this.state.rValue}
                     currentStep={this.state.currentStep}
-                    currentHistory={currentHistory}
+                    history={this.state.history}
                     cost={this.state.cost}
                     visualize={this.state.visualize}
                 >
