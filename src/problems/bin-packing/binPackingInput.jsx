@@ -38,7 +38,8 @@ class BinPackingInput extends Component {
             let rnd = this.getRndInteger(parseInt(1, 10), parseInt(9, 10));
             input.push("0." + rnd);
         }
-        this.setState({ input: input })
+        this.setState({ input: input });
+        this.setState({ isInputValid: true });
     }
 
     readInput = () => {

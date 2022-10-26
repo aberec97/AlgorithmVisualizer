@@ -36,7 +36,7 @@ class BinPackingContainer extends Component {
                 <h3>Bin Packing</h3>
                 <Description>
                     <p className="description">
-                        In this problem need to store all input elements in bins. Every bin has a capacity of 1, each input element has a size
+                        In this problem we need to store all input elements in bins. Every bin has a capacity of 1, each input element has a size
                         between 0 and 1. Our goal is to use the smallest number of bins possible.
                         <br />
                         The Next Fit algorithm closes the current bin if the next box cannot fit in it.

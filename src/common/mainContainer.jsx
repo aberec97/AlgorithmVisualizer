@@ -21,7 +21,7 @@ class MainContainer extends Component {
         ];
 
         return (<React.Fragment>
-            <h1>Online algorithm visualizer</h1>
+            <h1>Online Algorithm Visualizer</h1>
             <p>
                 Welcome! Start by selecting a problem, then choose an algorithm to solve
                 it!

@@ -46,12 +46,13 @@ class BinPackingAlgorithm extends Component {
         let bins = [];
         let bin = {
             capacity: 10,
-            fullness: 0
+            fullness: 0,
+            items: []
         }
         bins.push(bin);
         cost += 1;
         let history = new Map();
-        history.set(0, bins.slice());
+        history.set(0, {});
 
         for (let i = 0; i < input.length; i++) {
             let item = Number(input[i]) * 10;
@@ -59,15 +60,16 @@ class BinPackingAlgorithm extends Component {
             if (item + Number(openBin['fullness']) <= Number(openBin['capacity'])) {
                 let sum = openBin['fullness'] + item;
                 openBin['fullness'] = sum;
+                openBin['items'].push(item);
             } else {
                 bins.push({
                     capacity: 10,
-                    fullness: item
+                    fullness: item,
+                    items: [item]
                 });
                 cost += 1;
             }
-            //how many steps the algo takes can be extracted from here
-            history.set(Number(i + 1), bins.slice());
+            history.set(Number(i + 1), { item: item, bin: bins.length });
         }
         return { cost, history };
     }
@@ -79,32 +81,41 @@ class BinPackingAlgorithm extends Component {
         let bins = [];
         let bin = {
             capacity: 10,
-            fullness: 0
+            fullness: 0,
+            items: []
         }
         bins.push(bin);
         cost += 1;
         let history = new Map();
-        history.set(0, bins.slice());
+        history.set(0, {});
 
         for (let i = 0; i < input.length; i++) {
             let item = Number(input[i]) * 10;
-            for (let j = 0; j < bins.length; j++) {
-                let currentBin = bins[j];
+            let choosenBin;
+            let currentBin;
+            for (let j = 0; j <= bins.length; j++) {
+                if (j === bins.length) {
+                    console.log("bent vagyunk itt");
+                    bins.push({
+                        capacity: 10,
+                        fullness: item,
+                        items: [item]
+                    });
+                    choosenBin = j + 1;
+                    cost += 1;
+                    break;
+                }
+                currentBin = bins[j];
                 if (item + Number(currentBin['fullness']) <= Number(currentBin['capacity'])) {
-                    currentBin['fullness'] += item;
-                    item = 0;
+                    let sum = currentBin['fullness'] + item;
+                    currentBin['fullness'] = sum;
+                    currentBin['items'].push(item);
+                    choosenBin = bins.indexOf(currentBin) + 1;
+                    break;
                 }
             }
-            if (item !== 0) {
-                bins.push({
-                    capacity: 10,
-                    fullness: item
-                });
-                cost += 1;
-            }
-            history.set(Number(i + 1), bins.slice());
+            history.set(Number(i + 1), { item: item, bin: choosenBin });
         }
-
         return { cost, history };
     }
 
@@ -113,15 +124,11 @@ class BinPackingAlgorithm extends Component {
         let inputString = this.props.input.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
-        let bins = <React.Fragment></React.Fragment>;
-
         if (!this.state.history) {
             return (<p>Provide an input!</p>);
         }
 
-        if (this.state.cost > 0) {
-            bins = this.state.history.get(this.state.currentStep);
-        }
+        console.log(this.state.history);
 
         return (
             <div>
@@ -135,7 +142,7 @@ class BinPackingAlgorithm extends Component {
                 </button>
                 <br />
                 <BinPackingVisualization
-                    bins={bins}
+                    history={this.state.history}
                     currentStep={this.state.currentStep}
                     input={this.props.input}>
                 </BinPackingVisualization>
