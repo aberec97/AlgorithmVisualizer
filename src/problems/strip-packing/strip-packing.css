@@ -28,3 +28,8 @@
 .item {
     border: 4px solid green;
 }
+
+.shelfAndItem {
+    display: flex;
+    flex-flow: row-reverse;
+}

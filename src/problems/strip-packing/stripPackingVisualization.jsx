@@ -35,7 +35,7 @@ class StripPackingVisualization extends Component {
                 itemsToShelves[index].push(<div key={i} style={{ width: width, height: height }} className="item">{itemWidth}, {itemHeight}</div>);
             }
 
-            shelvesForRender[index] = <div key={i}><label>{shelfHeightValue}</label><div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}</div></div>;
+            shelvesForRender[index] = <div key={i} className='shelfAndItem'><label>{shelfHeightValue}</label><div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}</div></div>;
         }
 
         let inputString = this.props.inputArray.map(e => e + ";").toString();
