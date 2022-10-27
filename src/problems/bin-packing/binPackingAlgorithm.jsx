@@ -1,31 +1,11 @@
 import React, { Component } from 'react';
 import BinPackingVisualization from './binPackingVisualization';
-import Button from 'react-bootstrap/Button';
 
 class BinPackingAlgorithm extends Component {
     state = {
-        currentStep: 0,
         cost: 0,
         history: new Map()
     }
-
-    nextStep = () => {
-        if (!this.props.input || this.props.input.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.props.input.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
 
     solveWithSelectedAlgorithm(selectedAlg, input) {
         if (!selectedAlg) return null;
@@ -95,7 +75,6 @@ class BinPackingAlgorithm extends Component {
             let currentBin;
             for (let j = 0; j <= bins.length; j++) {
                 if (j === bins.length) {
-                    console.log("bent vagyunk itt");
                     bins.push({
                         capacity: 10,
                         fullness: item,
@@ -128,8 +107,6 @@ class BinPackingAlgorithm extends Component {
             return (<p>Provide an input!</p>);
         }
 
-        console.log(this.state.history);
-
         return (
             <div>
                 <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input.
@@ -143,15 +120,10 @@ class BinPackingAlgorithm extends Component {
                 <br />
                 <BinPackingVisualization
                     history={this.state.history}
-                    currentStep={this.state.currentStep}
                     input={this.props.input}>
                 </BinPackingVisualization>
                 <br />
                 <div>
-                    <div>
-                        <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                        <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-                    </div>
                     <br />
                     The cost of running {this.props.selectedAlgorithm} on this input is {this.state.cost}
                 </div>

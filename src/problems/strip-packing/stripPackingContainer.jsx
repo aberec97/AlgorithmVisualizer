@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Description from '../../common/description';
 import StripPackingInput from './stripPackingInput';
-import Button from 'react-bootstrap/Button';
 import StripPackingVisualization from './stripPackingVisualization';
 
 class StripPackingContainer extends Component {
@@ -25,24 +24,6 @@ class StripPackingContainer extends Component {
     changeVisualize() {
         this.setState({ visualize: !this.state.visualize });
     }
-
-    nextStep = () => {
-        if (this.state.inputArray.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.state.inputArray.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
 
     solveWithNextFitShelf(input, rValue) {
         let shelves = [];
@@ -151,8 +132,6 @@ class StripPackingContainer extends Component {
                     visualize={this.state.visualize}
                 >
                 </StripPackingVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
             </React.Fragment>
         );
     }

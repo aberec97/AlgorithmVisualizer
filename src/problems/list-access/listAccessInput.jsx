@@ -54,7 +54,8 @@ class ListAccessInput extends Component {
             let rnd = this.getRndInteger(parseInt(1, 10), parseInt(this.state.length, 10));
             input.push(rnd);
         }
-        this.setState({ input: input })
+        this.setState({ input: input });
+        this.changeInputValidity(true);
     }
 
     readInput = () => {
@@ -66,7 +67,6 @@ class ListAccessInput extends Component {
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
         const onlyNumbers = inputArray.filter(Number);
-        console.log(onlyNumbers);
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetCacheSize(this.state.length);
         this.setState({ inputIsReady: true });
@@ -106,10 +106,14 @@ class ListAccessInput extends Component {
                 <div className='input-random'>
                     <label>Number of queries:</label>
                     <input type="number" value={this.state.number} onChange={this.changeNumber} className='cache' />
-                    <label>{this.props.label}</label>
-                    <input type="number" value={this.state.length} onChange={this.changeLength} className='cache' />
-                    <Button variant="secondary" className='random-gen'
-                        onClick={this.generateRandomInput}>Generate</Button>
+                    <NumberInput
+                        label={"Length:"}
+                        cache={this.state.length}
+                        changeCache={this.changeLength}
+                        changeCacheValidity={this.changeLengthValidity}
+                        validity={this.state.isLengthValid}>
+                    </NumberInput>
+                    <Button variant="secondary" className='random-gen' onClick={this.generateRandomInput}>Generate</Button>
                 </div>
             </div>
         );

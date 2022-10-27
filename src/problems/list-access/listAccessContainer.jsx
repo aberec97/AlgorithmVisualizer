@@ -54,7 +54,6 @@ class ListAccessContainer extends Component {
                     </p>
                 </Description>
                 <ListAccessInput
-                    label={"Length:"}
                     onSetInputArray={this.handleSetInput}
                     onSetCacheSize={this.handleSetLength}>
                 </ListAccessInput>
