@@ -75,7 +75,6 @@ class StandardScheduling extends Component {
     }
 
     render() {
-
         let loadsFromHistory;
 
         if (this.state.makeSpan > 0) {

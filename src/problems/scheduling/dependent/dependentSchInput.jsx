@@ -91,7 +91,7 @@ class DependentSchInput extends Component {
                     label1={"Machine speeds - Range:"}
                     label2={"Size:"}
                     changeInput={this.changeMachineSpeeds}
-                    changeInputValidity={this.changeInputValidity}></RangeSizeRandomGenerator>
+                    changeInputValidity={this.changeMachineSpeedsValidity}></RangeSizeRandomGenerator>
             </React.Fragment>);
     }
 }
