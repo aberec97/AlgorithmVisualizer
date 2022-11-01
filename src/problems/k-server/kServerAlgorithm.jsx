@@ -247,7 +247,6 @@ class KServerAlgorithm extends Component {
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                     </div>
                     <br />
-
                 </div>
             </div>
         );

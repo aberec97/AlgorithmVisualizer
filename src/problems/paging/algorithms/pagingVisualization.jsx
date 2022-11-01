@@ -28,9 +28,13 @@ class PagingVisualization extends Component {
                         <span className='centered' key={i}>{this.props.cacheElements[i]}</span>)
             }
         }
+        let inputStringForRender = this.props.inputArray.toString().replace(/,/g, ", ");
 
         return (
             <React.Fragment>
+                <br />
+                <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.</p>
+
                 <div className='input-holder'>
                     {elements}
                 </div>

@@ -82,7 +82,9 @@ class SimpleInputController extends Component {
                 <RangeSizeRandomGenerator
                     changeInput={this.changeInput}
                     changeInputValidity={this.changeInputValidity}
-                    randomGenDescription={this.props.randomGenDescription}>
+                    randomGenDescription={this.props.randomGenDescription}
+                    label1={"Range:"}
+                    label2={"Size:"}>
                 </RangeSizeRandomGenerator>
             </div>
         );

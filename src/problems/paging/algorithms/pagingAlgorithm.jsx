@@ -9,7 +9,11 @@ class PagingAlgorithm extends Component {
         currentStep: 0,
         cost: 0,
         history: new Map(),
-        indexOfRemoved: -1
+        indexOfRemoved: -1,
+        isReadyForVisualization: false,
+        inputArray: '',
+        cacheSize: '',
+        selectedAlgorithm: ''
     }
 
     nextStep = () => {
@@ -157,6 +161,11 @@ class PagingAlgorithm extends Component {
     }
 
     solveWithSelectedAlgorithm(selectedAlg, input, cacheSize) {
+        this.setState({
+            inputArray: this.props.inputArray,
+            cacheSize: this.props.cacheSize,
+            selectedAlgorithm: this.props.selectedAlgorithm
+        });
         if (!selectedAlg) return null;
         let result = { cost: 0, history: null };
         switch (selectedAlg) {
@@ -165,41 +174,35 @@ class PagingAlgorithm extends Component {
             case "LFD": result = this.solveWithLFD(input, cacheSize); break;
             default: result = null;
         }
-        this.setState({ cost: result['cost'], history: result['history'] });
+        if (result['history'] !== null) {
+            this.setState({
+                cost: result['cost'],
+                history: result['history'],
+                isReadyForVisualization: true,
+                currentStep: 0
+            });
+        }
         return result;
     }
 
     render() {
         if (!this.props.selectedAlgorithm) return <React.Fragment></React.Fragment>;
-        let inputString = this.props.inputArray.toString();
-        let inputStringForRender = inputString.replace(/,/g, ", ");
 
         let elements = <React.Fragment></React.Fragment>;
-
-        if (!this.state.history) {
-            return (<p>Provide an input!</p>);
-        }
 
         if (this.state.currentStep > 0 && this.state.cost > 0) {
             elements = this.state.history.get(this.state.currentStep);
         }
 
-        return (
+        let visualization = this.state.isReadyForVisualization ?
             <div>
-                <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.
-                    Press the Run button to see the result!</p>
-                <button
-                    className='btn btn-success'
-                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>
-                    Run
-                </button>
-                <br />
                 <PagingVisualization
-                    inputArray={this.props.inputArray}
-                    cacheSize={this.props.cacheSize}
+                    inputArray={this.state.inputArray}
+                    cacheSize={this.state.cacheSize}
                     currentStep={this.state.currentStep}
                     cacheElements={elements}
-                    removedElementIndex={this.state.indexOfRemoved}>
+                    removedElementIndex={this.state.indexOfRemoved}
+                    selectedAlgorithm={this.state.selectedAlgorithm}>
                 </PagingVisualization>
                 <br />
                 <div>
@@ -208,8 +211,18 @@ class PagingAlgorithm extends Component {
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                     </div>
                     <br />
-                    The cost of running {this.props.selectedAlgorithm} on this input is {this.state.cost}
+                    The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}
                 </div>
+            </div> : <React.Fragment></React.Fragment>;
+
+        return (
+            <div>
+                <button
+                    className='btn btn-success'
+                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.cacheSize)}>
+                    Run
+                </button>
+                {visualization}
             </div>
         )
     }
