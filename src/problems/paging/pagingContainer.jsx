@@ -10,7 +10,12 @@ class PagingContainer extends Component {
         inputArray: '',
         cacheSize: '',
         selectedAlgorithm: '',
-        renderSolution: false
+        renderSolution: false,
+        algorithms: [
+            { id: 1, name: "FIFO" },
+            { id: 2, name: "LRU" },
+            { id: 3, name: "LFD" }
+        ]
     }
 
     handleSetInputArray = (inputArray) => {
@@ -37,12 +42,6 @@ class PagingContainer extends Component {
     }
 
     render() {
-        const algorithms = [
-            { id: 1, name: "FIFO" },
-            { id: 2, name: "LRU" },
-            { id: 3, name: "LFD" }
-        ];
-
         return (
             <div>
                 <h3>Paging</h3>
@@ -72,7 +71,7 @@ class PagingContainer extends Component {
                 </SimpleInputController>
                 <div className='algorithm-chooser'>
                     <h5>Choose an algorithm:</h5>
-                    <ButtonHolder buttons={algorithms} onSelect={this.handleAlgSelect}></ButtonHolder>
+                    <ButtonHolder buttons={this.state.algorithms} onSelect={this.handleAlgSelect}></ButtonHolder>
                 </div>
                 <PagingAlgorithm
                     selectedAlgorithm={this.state.selectedAlgorithm}

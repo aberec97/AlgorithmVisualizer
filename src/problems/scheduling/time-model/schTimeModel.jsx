@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-
 import Description from '../../../common/description';
 import SchTimeModelInput from './schTimeModelInput';
+import SchTimeModelAlgorithm from './schTimeModelAlgorithm';
+import ButtonHolder from '../../../common/buttonHolder';
+import '../scheduling.css';
 
 class SchTimeModel extends Component {
     state = {
@@ -10,7 +12,9 @@ class SchTimeModel extends Component {
         currentStep: 0,
         makeSpan: '',
         history: new Map(),
-        visualize: false
+        visualize: false,
+        algorithms: [{ id: 1, name: "INTV" }, { id: 2, name: "Online LPT" }],
+        selectedAlgorithm: ''
     }
 
     handleSetInputArray = (inputArray) => {
@@ -19,6 +23,10 @@ class SchTimeModel extends Component {
 
     handleSetNumOfMachines = (numOfMachines) => {
         this.setState({ numOfMachines });
+    };
+
+    handleAlgSelect = (selectedAlgorithm) => {
+        this.setState({ selectedAlgorithm });
     };
 
     nextStep = () => {
@@ -58,6 +66,16 @@ class SchTimeModel extends Component {
                         onSetNumOfMachines={this.handleSetNumOfMachines}>
                     </SchTimeModelInput>
                 </div>
+                <div className='algorithm-chooser'>
+                    <h5>Choose an algorithm:</h5>
+                    <ButtonHolder buttons={this.state.algorithms} onSelect={this.handleAlgSelect}></ButtonHolder>
+                </div>
+                <SchTimeModelAlgorithm
+                    selectedAlgorithm={this.state.selectedAlgorithm}
+                    input={this.state.inputArray}
+                    numOfMachines={this.state.numOfMachines}
+                >
+                </SchTimeModelAlgorithm>
                 <br />
                 Algorithm is not implemented yet!
             </React.Fragment>
