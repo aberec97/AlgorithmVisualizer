@@ -22,7 +22,7 @@ class PagingAlgorithm extends Component {
         let currentStep = this.state.currentStep;
         let nextStep = currentStep + 1;
         if (Number(currentStep) < Number(length) - 1) {
-            let indexOfRemoved = this.findRemovedElement(this.state.history.get(nextStep), this.state.history.get(nextStep + 1));
+            let indexOfRemoved = this.findRemovedElement(this.state.history.get(nextStep)['cache'], this.state.history.get(nextStep + 1)['cache']);
             this.setState({ indexOfRemoved });
         } else {
             this.setState({ indexOfRemoved: -1 });
@@ -37,7 +37,7 @@ class PagingAlgorithm extends Component {
         let currentStep = this.state.currentStep;
         let prevStep = currentStep - 1;
         if (Number(currentStep) > 1) {
-            let indexOfRemoved = this.findRemovedElement(this.state.history.get(prevStep), this.state.history.get(currentStep));
+            let indexOfRemoved = this.findRemovedElement(this.state.history.get(prevStep)['cache'], this.state.history.get(currentStep)['cache']);
             this.setState({ indexOfRemoved });
         } else {
             this.setState({ indexOfRemoved: -1 });
@@ -64,21 +64,24 @@ class PagingAlgorithm extends Component {
         let cache = [];
         let cost = 0;
         let history = new Map();
-        history.set(0, cache.slice());
+        let explanation = <br />;
+        history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
             if (cache.length < cache_size && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
+                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
+            }
+            else if (!cache.includes(currentElement)) {
+                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + cache.shift() + " (FIFO always removes the first cache element). +1 insertion.";
+                cache.push(currentElement);
+                cost++;
             }
             else {
-                if (!cache.includes(currentElement)) {
-                    cache.shift()
-                    cache.push(currentElement);
-                    cost++;
-                }
+                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
             }
-            history.set(Number(i + 1), cache.slice());
+            history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
         }
         return { cost, history };
     }
@@ -91,29 +94,31 @@ class PagingAlgorithm extends Component {
         let inputUntilNow = [];
         let cost = 0;
         let history = new Map();
-        history.set(0, cache.slice());
-
+        let explanation = <br />;
+        history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
             if (cache.length < cache_size && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
-            } else {
-                if (!cache.includes(currentElement)) {
-                    let order = [];
-                    for (let j = inputUntilNow.length - 1; j >= 0; j--) {
-                        let currentJ = inputUntilNow[j];
-                        if (!order.includes(currentJ) && order.length < cache_size) {
-                            order.push(currentJ);
-                        }
+                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
+            } else if (!cache.includes(currentElement)) {
+                let order = [];
+                for (let j = inputUntilNow.length - 1; j >= 0; j--) {
+                    let currentJ = inputUntilNow[j];
+                    if (!order.includes(currentJ) && order.length < cache_size) {
+                        order.push(currentJ);
                     }
-                    let elementToRemove = order[order.length - 1];
-                    cache.splice(cache.indexOf(elementToRemove), 1);
-                    cache.push(currentElement);
-                    cost++;
                 }
+                let elementToRemove = order[order.length - 1];
+                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + elementToRemove + " (LRU always removes the least recently used element). +1 insertion.";
+                cache.splice(cache.indexOf(elementToRemove), 1);
+                cache.push(currentElement);
+                cost++;
+            } else {
+                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
             }
-            history.set(Number(i + 1), cache.slice());
+            history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
             inputUntilNow.push(currentElement);
         }
         return { cost, history };
@@ -126,36 +131,40 @@ class PagingAlgorithm extends Component {
         let cache = [];
         let cost = 0;
         let history = new Map();
-        history.set(0, cache.slice());
+        let explanation = <br />;
+        history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
             if (cache.length < cache_size && !cache.includes(currentElement)) {
+                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
                 cache.push(currentElement);
                 cost++;
             }
-            else {
-                if (!cache.includes(currentElement)) {
-                    let nextCachePos = [];
-                    let elementToRemove;
-                    for (let j = i; j < input.length; j++) {
-                        if (cache.includes(input[j]) && !nextCachePos.includes(input[j])) {
-                            nextCachePos.push(input[j]);
-                        }
+            else if (!cache.includes(currentElement)) {
+                let nextCachePos = [];
+                let elementToRemove;
+                for (let j = i; j < input.length; j++) {
+                    if (cache.includes(input[j]) && !nextCachePos.includes(input[j])) {
+                        nextCachePos.push(input[j]);
                     }
-                    if (nextCachePos.length < cache.length) {
-                        for (let j = 0; j < cache.length; j++) {
-                            if (!nextCachePos.includes(cache[j])) {
-                                elementToRemove = cache[j]; break;
-                            }
-                        }
-                    } else {
-                        elementToRemove = nextCachePos[nextCachePos.length - 1];
-                    }
-                    cache[cache.indexOf(elementToRemove)] = currentElement;
-                    cost++;
                 }
+                if (nextCachePos.length < cache.length) {
+                    for (let j = 0; j < cache.length; j++) {
+                        if (!nextCachePos.includes(cache[j])) {
+                            elementToRemove = cache[j]; break;
+                        }
+                    }
+                } else {
+                    elementToRemove = nextCachePos[nextCachePos.length - 1];
+                }
+                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + elementToRemove + " (LFD always removes the element that will be needed last). +1 insertion.";
+                cache[cache.indexOf(elementToRemove)] = currentElement;
+                cost++;
+            } else {
+                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
             }
-            history.set(Number(i + 1), cache.slice());
+
+            history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
         }
         return { cost, history };
     }
@@ -188,10 +197,10 @@ class PagingAlgorithm extends Component {
     render() {
         if (!this.props.selectedAlgorithm) return <React.Fragment></React.Fragment>;
 
-        let elements = <React.Fragment></React.Fragment>;
+        let currentHistory = <React.Fragment></React.Fragment>;
 
-        if (this.state.currentStep > 0 && this.state.cost > 0) {
-            elements = this.state.history.get(this.state.currentStep);
+        if (this.state.currentStep >= 0 && this.state.cost > 0) {
+            currentHistory = this.state.history.get(this.state.currentStep);
         }
 
         let costVisualization = this.state.currentStep === this.state.inputArray.length ? <p>The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}</p> : <br />;
@@ -202,7 +211,7 @@ class PagingAlgorithm extends Component {
                     inputArray={this.state.inputArray}
                     cacheSize={this.state.cacheSize}
                     currentStep={this.state.currentStep}
-                    cacheElements={elements}
+                    history={currentHistory}
                     removedElementIndex={this.state.indexOfRemoved}
                     selectedAlgorithm={this.state.selectedAlgorithm}>
                 </PagingVisualization>

@@ -23,11 +23,15 @@ class PagingVisualization extends Component {
         }
         let cache = [];
         if (this.props.cacheSize > 0) {
+            let elem = " ";
             for (let i = 0; i < this.props.cacheSize; i++) {
+                if (this.props.currentStep > 0) {
+                    elem = this.props.history['cache'][i];
+                }
                 cache.push(
                     i === this.props.removedElementIndex ?
-                        <span className='centered toBeRemoved' key={i}>{this.props.cacheElements[i]}</span> :
-                        <span className='centered' key={i}>{this.props.cacheElements[i]}</span>)
+                        <span className='centered toBeRemoved' key={i}>{elem}</span> :
+                        <span className='centered' key={i}>{elem}</span>)
             }
         }
         let inputStringForRender = this.props.inputArray.toString().replace(/,/g, ", ");
@@ -43,6 +47,10 @@ class PagingVisualization extends Component {
                 <div className='cache-items'>
                     {cache}
                 </div>
+                <br />
+                <p className='explanation'>{this.props.history['explanation']}</p>
+                <br />
+                <p>Current step: {this.props.currentStep} / {this.props.inputArray.length}</p>
             </React.Fragment>
         );
     }
