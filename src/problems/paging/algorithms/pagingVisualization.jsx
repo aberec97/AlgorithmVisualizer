@@ -10,9 +10,11 @@ class PagingVisualization extends Component {
     render() {
         const input = this.props.inputArray;
         let elements = [];
-        if (input.length > 0) { //kell azt is nezni hogy futott e mar az alg.
+        if (input.length > 0) {
             for (let i = 0; i < input.length; i++) {
-                if (i === this.props.currentStep) {
+                if (i < this.props.currentStep) {
+                    continue;
+                } else if (i === this.props.currentStep) {
                     elements.push(<div className='highlighted m-2' key={i}>{input[i]}</div>);
                 } else {
                     elements.push(<div className='m-2' key={i}>{input[i]}</div>);
@@ -34,7 +36,6 @@ class PagingVisualization extends Component {
             <React.Fragment>
                 <br />
                 <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and cache size of {this.props.cacheSize}.</p>
-
                 <div className='input-holder'>
                     {elements}
                 </div>

@@ -10,7 +10,11 @@
 }
 
 .highlighted {
-  color: green;
+  color: greenyellow !important;
+}
+
+.m-2 {
+  color: dimgray;
 }
 
 .centered {

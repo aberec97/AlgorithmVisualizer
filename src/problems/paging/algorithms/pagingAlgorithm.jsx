@@ -194,6 +194,8 @@ class PagingAlgorithm extends Component {
             elements = this.state.history.get(this.state.currentStep);
         }
 
+        let costVisualization = this.state.currentStep === this.state.inputArray.length ? <p>The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}</p> : <br />;
+
         let visualization = this.state.isReadyForVisualization ?
             <div>
                 <PagingVisualization
@@ -211,7 +213,7 @@ class PagingAlgorithm extends Component {
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                     </div>
                     <br />
-                    The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}
+                    {costVisualization}
                 </div>
             </div> : <React.Fragment></React.Fragment>;
 
