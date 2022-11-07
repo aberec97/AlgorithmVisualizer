@@ -10,8 +10,28 @@ class StripPackingContainer extends Component {
         currentStep: 0,
         cost: 0,
         history: new Map(),
-        visualize: false
+        visualize: false,
+        inputForVisualization: '',
+        rValueForVisualization: ''
     }
+
+    nextStep = () => {
+        if (this.state.inputArray.length === 0 || !this.state.history || this.state.cost === 0) return;
+        const currentStep = this.state.currentStep;
+        const nextStep = currentStep + 1;
+        if (Number(currentStep) < Number(this.state.inputArray.length)) {
+            this.setState({ currentStep: nextStep });
+        }
+    };
+
+    previousStep = () => {
+        if (!this.state.history || this.state.cost === 0) return;
+        let currentStep = this.state.currentStep;
+        let prevStep = currentStep - 1;
+        if (Number(currentStep) > 0) {
+            this.setState({ currentStep: prevStep });
+        }
+    };
 
     handleSetInputArray = (inputArray) => {
         this.setState({ inputArray });
@@ -19,10 +39,6 @@ class StripPackingContainer extends Component {
 
     handleSetRValue = (rValue) => {
         this.setState({ rValue });
-    }
-
-    changeVisualize() {
-        this.setState({ visualize: !this.state.visualize });
     }
 
     solveWithNextFitShelf(input, rValue) {
@@ -90,8 +106,7 @@ class StripPackingContainer extends Component {
                 }
             }
         }
-        this.setState({ history, cost });
-        this.changeVisualize();
+        this.setState({ history, cost, inputForVisualization: input, rValueForVisualization: rValue, currentStep: 0, visualize: true });
     }
 
     render() {
@@ -124,12 +139,14 @@ class StripPackingContainer extends Component {
                 <br />
                 <br />
                 <StripPackingVisualization
-                    inputArray={this.state.inputArray}
-                    rValue={this.state.rValue}
+                    inputArray={this.state.inputForVisualization}
+                    rValue={this.state.rValueForVisualization}
                     currentStep={this.state.currentStep}
                     history={this.state.history}
                     cost={this.state.cost}
                     visualize={this.state.visualize}
+                    previousStep={this.previousStep}
+                    nextStep={this.nextStep}
                 >
                 </StripPackingVisualization>
             </React.Fragment>

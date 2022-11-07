@@ -77,7 +77,7 @@ class IndependentSchInput extends Component {
             if (i < this.state.number - 1) input.push(job + ';');
             else input.push(job);
         }
-        this.setState({ input: input, warning: <div></div> })
+        this.setState({ input: input, warning: <div></div>, isInputValid: true });
     }
 
     readInput = () => {

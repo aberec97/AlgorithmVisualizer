@@ -6,7 +6,10 @@ class ListAccessAlgorithm extends Component {
     state = {
         currentStep: 0,
         cost: 0,
-        history: new Map()
+        history: new Map(),
+        selectedAlgorithm: '',
+        input: '',
+        length: ''
     }
 
     nextStep = () => {
@@ -35,7 +38,7 @@ class ListAccessAlgorithm extends Component {
             case "BIT": result = this.solveWithBIT(length, queries); break;
             default: result = null;
         }
-        this.setState({ cost: result['cost'], history: result['history'] });
+        this.setState({ cost: result['cost'], history: result['history'], selectedAlgorithm: selectedAlg, input: queries, length: length, currentStep: 0 });
         return result;
     }
 
@@ -103,7 +106,7 @@ class ListAccessAlgorithm extends Component {
 
     render() {
         if (!this.props.selectedAlgorithm) return <React.Fragment></React.Fragment>;
-        let inputString = this.props.queries.toString();
+        let inputString = this.state.input.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
         let linkedList = <React.Fragment></React.Fragment>;
@@ -118,7 +121,7 @@ class ListAccessAlgorithm extends Component {
 
         return (
             <div>
-                <p>You selected {this.props.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and linked list length of {this.props.length}.
+                <p>You selected {this.state.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and linked list length of {this.state.length}.
                     Press the Run button to see the result!</p>
                 <button
                     className='btn btn-success'
@@ -138,7 +141,7 @@ class ListAccessAlgorithm extends Component {
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                     </div>
                     <br />
-                    The cost of running {this.props.selectedAlgorithm} on this input is {this.state.cost}
+                    The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}
                 </div>
             </div>
         )

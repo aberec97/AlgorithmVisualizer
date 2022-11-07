@@ -106,7 +106,7 @@ class SchTimeModelAlgorithm extends Component {
         return { remainingJobs, newStartTime };
     }
 
-    //TODO: ezt alaposabban tesztelni!
+    //TODO: ezt alaposabban tesztelni! - meg kell nezni mi tortenik, ha nagyobb szünet van - pl. előző job 3s-nél van kész, a kövi viszont csak 5s-kor jön.
     //Azt a jobot ütemezi először, amelyik a legnehezebb. Amint felszabadul egy gép, megnézi az addig érkezett jobokat és a leghosszabbat rárakja.
     solveWithOnlineLPT(input, numOfMachines) {
         let sortedInput = this.sortJobsByTimeAndSize(input);

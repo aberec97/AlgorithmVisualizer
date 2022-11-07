@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 
 class StandardSchVisualization extends Component {
-    state = {
-        currentStep: 0
-    }
     render() {
-
         if (!this.props.visualize) {
             return <React.Fragment>Run the algorithm! <br /> </React.Fragment>;
         }
@@ -24,6 +20,8 @@ class StandardSchVisualization extends Component {
             }
         }
         else {
+            console.log("input array:", this.props.inputArray);
+            console.log("numOfMachines:", this.props.numOfMachines);
             return <React.Fragment>Please provide an input!</React.Fragment>;
         }
 
@@ -39,6 +37,8 @@ class StandardSchVisualization extends Component {
                     </div>
                 </div>
                 makespan = {this.props.makeSpan}
+                <br />
+                current step: {this.props.currentStep} / {this.props.inputArray.length}
                 <br />
             </React.Fragment>
         );

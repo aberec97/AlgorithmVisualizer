@@ -11,7 +11,9 @@ class DependentScheduling extends Component {
         currentStep: 0,
         makeSpan: '',
         history: new Map(),
-        visualize: false
+        visualize: false,
+        inputForVisualization: '',
+        machineSpeedsForVisualization: ''
     }
 
     handleSetInputArray = (inputArray) => {
@@ -42,6 +44,7 @@ class DependentScheduling extends Component {
     };
 
     solveWithList(input, numOfMachines) {
+        this.setState({ inputForVisualization: input, machineSpeedsForVisualization: numOfMachines });
         let machines = [];
         for (let j = 0; j < numOfMachines; j++) {
             machines.push(Number(0));
@@ -80,7 +83,7 @@ class DependentScheduling extends Component {
             }
         }
 
-        this.setState({ makeSpan, history, visualize: true });
+        this.setState({ makeSpan, history, visualize: true, currentStep: 0 });
     }
 
     render() {
@@ -114,8 +117,8 @@ class DependentScheduling extends Component {
                 <br />
                 <br />
                 <StandardSchVisualization
-                    inputArray={this.state.inputArray}
-                    numOfMachines={this.state.machineSpeeds.length}
+                    inputArray={this.state.inputForVisualization}
+                    numOfMachines={this.state.machineSpeedsForVisualization}
                     currentStep={this.state.currentStep}
                     loadsFromHistory={loadsFromHistory}
                     makeSpan={this.state.makeSpan}

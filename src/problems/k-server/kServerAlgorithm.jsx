@@ -7,7 +7,10 @@ class KServerAlgorithm extends Component {
         currentStep: 0,
         cost: -1,
         history: new Map(),
-        range: []
+        range: [],
+        inputForVisualization: '',
+        startConfigForVisualization: '',
+        selectedAlgorithm: ''
     }
 
     nextStep = () => {
@@ -63,8 +66,7 @@ class KServerAlgorithm extends Component {
             default: result = null;
         }
         let range = this.findRange(this.props.startConfig, this.props.input);
-        this.setState({ cost: result['cost'], history: result['history'] });
-        this.setState({ range });
+        this.setState({ cost: result['cost'], history: result['history'], range, currentStep: 0, selectedAlgorithm: selectedAlg, inputForVisualization: input, startConfigForVisualization: startConfig });
     }
 
     distance(x, y) {
@@ -212,10 +214,10 @@ class KServerAlgorithm extends Component {
     render() {
         if (!this.props.selectedAlgorithm) return <React.Fragment>Select an algorithm!</React.Fragment>;
 
-        let startConfigString = this.props.startConfig.toString();
+        let startConfigString = this.state.startConfigForVisualization.toString();
         let startConfigStringForRender = startConfigString.replace(/,/g, ", ");
 
-        let inputString = this.props.input.toString();
+        let inputString = this.state.inputForVisualization.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
         let servers = [];
@@ -223,7 +225,7 @@ class KServerAlgorithm extends Component {
 
         return (
             <div>
-                <p>You selected {this.props.selectedAlgorithm} with &#123; {startConfigStringForRender} &#125; starting configuration
+                <p>You selected {this.state.selectedAlgorithm} with &#123; {startConfigStringForRender} &#125; starting configuration
                     and &#123; {inputStringForRender} &#125; input. Press Run to see the result!
                 </p>
                 <button
@@ -235,10 +237,10 @@ class KServerAlgorithm extends Component {
                 <KServerVisualization
                     cost={this.state.cost}
                     servers={servers}
-                    selectedAlgorithm={this.props.selectedAlgorithm}
+                    selectedAlgorithm={this.state.selectedAlgorithm}
                     range={this.state.range}
                     currentStep={this.state.currentStep}
-                    input={this.props.input}>
+                    input={this.state.inputForVisualization}>
                 </KServerVisualization>
                 <br />
                 <div>

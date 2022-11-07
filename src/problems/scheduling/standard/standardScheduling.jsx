@@ -12,7 +12,9 @@ class StandardScheduling extends Component {
         currentStep: 0,
         makeSpan: '',
         history: new Map(),
-        visualize: false
+        visualize: false,
+        inputForVisualization: '',
+        numOfMachinesForVisualization: ''
     }
 
     handleSetInputArray = (inputArray) => {
@@ -43,6 +45,7 @@ class StandardScheduling extends Component {
     };
 
     solveWithList(input, numOfMachines) {
+        this.setState({ inputForVisualization: input, numOfMachinesForVisualization: numOfMachines });
         let machines = [];
         for (let j = 0; j < numOfMachines; j++) {
             machines.push(Number(0));
@@ -71,7 +74,7 @@ class StandardScheduling extends Component {
         }
         console.log("machines = ", machines);
         console.log("makespan: ", makeSpan);
-        this.setState({ makeSpan, history, visualize: true });
+        this.setState({ makeSpan, history, visualize: true, currentStep: 0 });
     }
 
     render() {
@@ -109,8 +112,8 @@ class StandardScheduling extends Component {
                 <br />
                 <br />
                 <StandardSchVisualization
-                    inputArray={this.state.inputArray}
-                    numOfMachines={this.state.numOfMachines}
+                    inputArray={this.state.inputForVisualization}
+                    numOfMachines={this.state.numOfMachinesForVisualization}
                     currentStep={this.state.currentStep}
                     loadsFromHistory={loadsFromHistory}
                     makeSpan={this.state.makeSpan}

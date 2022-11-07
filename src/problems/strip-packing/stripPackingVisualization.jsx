@@ -3,27 +3,6 @@ import './strip-packing.css';
 import Button from 'react-bootstrap/Button';
 
 class StripPackingVisualization extends Component {
-    state = { currentStep: 0 }
-
-
-    nextStep = () => {
-        if (this.props.inputArray.length === 0 || !this.props.history || this.props.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.props.inputArray.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.props.history || this.props.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
-
 
     render() {
         if (!this.props.visualize) return <React.Fragment><br /></React.Fragment>;
@@ -40,7 +19,7 @@ class StripPackingVisualization extends Component {
 
         let itemsToShelves = [];
 
-        for (let i = 1; i <= this.state.currentStep; i++) {
+        for (let i = 1; i <= this.props.currentStep; i++) {
             let currentHistory = history.get(i);
 
             let index = currentHistory['shelfIndex'];
@@ -75,10 +54,10 @@ class StripPackingVisualization extends Component {
                 </div>
                 The cost of running Next Fit Shelf on this input is {this.props.cost}.
                 <br />
-                current step = {this.state.currentStep} / {this.props.inputArray.length}
+                current step = {this.props.currentStep} / {this.props.inputArray.length}
                 <br />
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                <Button variant="light" onClick={this.props.previousStep}>&lt;</Button>
+                <Button variant="light" onClick={this.props.nextStep}>&gt;</Button>
             </React.Fragment>
         );
     }

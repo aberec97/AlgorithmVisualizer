@@ -3,32 +3,11 @@ import './bin-packing.css';
 import Button from 'react-bootstrap/Button';
 
 class BinPackingVisualization extends Component {
-    state = {
-        currentStep: 0
-    }
-
-    nextStep = () => {
-        if (!this.props.input || this.props.input.length === 0 || !this.props.history || this.props.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.props.input.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.props.history || this.props.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
 
     render() {
         let inputLength = this.props.input.length;
         let history = this.props.history;
-        let currentStep = this.state.currentStep;
+        let currentStep = this.props.currentStep;
         let bins = new Map();
         bins.set(0, [])
         let currentItemAndBin;
@@ -61,10 +40,10 @@ class BinPackingVisualization extends Component {
                 <div className='bin-container'>
                     {visualize}
                 </div>
-                Current step: {this.state.currentStep} / {inputLength}
+                Current step: {this.props.currentStep} / {inputLength}
                 <div>
-                    <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                    <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                    <Button variant="light" onClick={this.props.previousStep}>&lt;</Button>
+                    <Button variant="light" onClick={this.props.nextStep}>&gt;</Button>
                 </div>
             </React.Fragment>
         );
