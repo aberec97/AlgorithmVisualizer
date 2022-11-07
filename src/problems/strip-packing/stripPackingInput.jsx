@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import SimpleInput from '../../common/simpleInput';
+import NumberInput from '../../common/numberInput';
 
 class StipPackingInput extends Component {
     state = {
         input: '',
         number: '',
         isInputValid: false,
+        isRValid: false,
         isInputReady: true,
         r: ''
     }
@@ -23,15 +25,21 @@ class StipPackingInput extends Component {
         });
     }
 
+    changeRValidity = (isValid) => {
+        this.setState({
+            isRValid: isValid
+        });
+    }
+
     changeNumber = (event) => {
         this.setState({
             number: event.target.value
         });
     }
 
-    changeR = (event) => {
+    changeR = (value) => {
         this.setState({
-            r: event.target.value
+            r: value
         });
     }
 
@@ -47,10 +55,14 @@ class StipPackingInput extends Component {
             if (i < this.state.number - 1) input.push("0." + rnd + " 0." + rnd2 + ";");
             else input.push("0." + rnd + " 0." + rnd2);
         }
-        this.setState({ input: input })
+        this.setState({ input: input, isInputValid: true })
     }
 
     readInput = () => {
+        if (!this.state.isInputValid || !this.state.isRValid) {
+            this.setState({ isInputReady: false });
+            return;
+        }
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
@@ -58,9 +70,12 @@ class StipPackingInput extends Component {
         const onlyNumbers = boxes.map(j => j.filter(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetRValue(this.state.r);
+        this.setState({ isInputReady: true });
     };
 
     render() {
+        let validationMessage = this.state.isInputReady ? <br /> : <div className='invalid-field'>Invalid input!</div>;
+
         return (
             <div>
                 <h6>
@@ -77,11 +92,16 @@ class StipPackingInput extends Component {
                     acceptedCharacters={['.', ';', ',', ' ']}
                 >
                 </SimpleInput>
-                <label>
-                    R:
-                </label>
-                <input type="number" value={this.state.r} onChange={this.changeR} className='cache' />
+                <NumberInput
+                    label={"R:"}
+                    cache={this.state.r}
+                    changeCache={this.changeR}
+                    changeCacheValidity={this.changeRValidity}
+                    validity={this.state.isRValid}
+                >
+                </NumberInput>
                 <button className='btn btn-success' onClick={this.readInput}>Save</button>
+                {validationMessage}
                 <h6>
                     You can also generate a random input.
                 </h6>
