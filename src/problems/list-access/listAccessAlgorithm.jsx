@@ -9,7 +9,8 @@ class ListAccessAlgorithm extends Component {
         history: new Map(),
         selectedAlgorithm: '',
         input: '',
-        length: ''
+        length: '',
+        visualize: false
     }
 
     nextStep = () => {
@@ -38,7 +39,10 @@ class ListAccessAlgorithm extends Component {
             case "BIT": result = this.solveWithBIT(length, queries); break;
             default: result = null;
         }
-        this.setState({ cost: result['cost'], history: result['history'], selectedAlgorithm: selectedAlg, input: queries, length: length, currentStep: 0 });
+        this.setState({
+            cost: result['cost'], history: result['history'],
+            selectedAlgorithm: selectedAlg, input: queries, length: length, currentStep: 0, visualize: true
+        });
         return result;
     }
 
@@ -119,16 +123,10 @@ class ListAccessAlgorithm extends Component {
             linkedList = this.state.history.get(this.state.currentStep);
         }
 
-        return (
-            <div>
-                <p>You selected {this.state.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input and linked list length of {this.state.length}.
-                    Press the Run button to see the result!</p>
-                <button
-                    className='btn btn-success'
-                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.queries, this.props.length)}>
-                    Run
-                </button>
+        let visualization = this.state.visualize ?
+            <React.Fragment>
                 <br />
+                <p>You selected {this.state.selectedAlgorithm} with the following queries: &#123; {inputStringForRender} &#125; and linked list length of {this.state.length}.</p>
                 <ListAccessVisualization
                     linkedList={linkedList}
                     input={this.props.queries}
@@ -143,7 +141,18 @@ class ListAccessAlgorithm extends Component {
                     <br />
                     The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}
                 </div>
-            </div>
+            </React.Fragment> : <React.Fragment></React.Fragment>;
+
+        return (
+            <React.Fragment>
+                <button
+                    className='btn btn-success'
+                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.queries, this.props.length)}>
+                    Run
+                </button>
+                <br />
+                {visualization}
+            </React.Fragment>
         )
     }
 }

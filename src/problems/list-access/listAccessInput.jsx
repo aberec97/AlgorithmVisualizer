@@ -80,7 +80,7 @@ class ListAccessInput extends Component {
                 <h6>
                     Provide an input with whole numbers, for separation use commas (",") or spaces (" ")!
                     The length of the list will determine the linked list,
-                    for example if the length is 3, the list will be: 1 -&gt; 2 -&gt; 3.
+                    for example if the length is 3, then the list will be: 1 -&gt; 2 -&gt; 3.
                 </h6>
                 <SimpleInput
                     label={"Queries:"}
