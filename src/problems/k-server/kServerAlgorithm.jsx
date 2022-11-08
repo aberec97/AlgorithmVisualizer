@@ -155,7 +155,7 @@ class KServerAlgorithm extends Component {
                             this.moveServer(serverPositions, nextElement, nextElement - distanceRequestPrevElement);
                             explanation = "The previous request asked for location " + request +
                                 ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
-                                " towards the requested location. This means we covered the distance of " + distanceRequestPrevElement + " twice. (+" + cost + ")";
+                                " towards the requested location. This means we covered the distance of " + distanceRequestPrevElement + " twice. (+" + 2 * distanceRequestPrevElement + ")";
                             history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         } else {
                             cost += 2 * distanceRequestNextElement;
@@ -163,7 +163,7 @@ class KServerAlgorithm extends Component {
                             this.moveServer(serverPositions, prevElement, prevElement + distanceRequestNextElement);
                             explanation = "The previous request asked for location " + request +
                                 ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
-                                " towards the requested location. This means we covered the distance of " + distanceRequestNextElement + " twice. (+" + cost + ")";
+                                " towards the requested location. This means we covered the distance of " + distanceRequestNextElement + " twice. (+" + 2 * distanceRequestNextElement + ")";
                             history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         }
                         break;
