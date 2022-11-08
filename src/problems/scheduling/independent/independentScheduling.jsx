@@ -50,7 +50,8 @@ class IndependentScheduling extends Component {
             machines.push(Number(0));
         }
         let history = new Map();
-        history.set(0, machines.slice());
+        let explanation = "";
+        history.set(0, { machines: machines.slice(), explanation: explanation });
 
         for (let i = 0; i < input.length; i++) {
             let job = input[i];
@@ -66,7 +67,9 @@ class IndependentScheduling extends Component {
                 }
             }
             machines[indexToPutLoadOn] += Number(newLoad);
-            history.set(i + 1, machines.slice());
+            explanation = "The previous job was: (" + input[i] + "), we scheduled it on the " + (indexToPutLoadOn + 1) +
+                ". machine, because it is the fastest at handling this job (or to minimize the makespan).";
+            history.set(i + 1, { machines: machines.slice(), explanation: explanation });
         }
 
         let makeSpan = 0;
@@ -80,11 +83,25 @@ class IndependentScheduling extends Component {
     }
 
     render() {
-        let loadsFromHistory;
+        let currentHistory;
 
         if (this.state.makeSpan > 0) {
-            loadsFromHistory = this.state.history.get(this.state.currentStep);
+            currentHistory = this.state.history.get(this.state.currentStep);
         }
+
+        let visualization = this.state.visualize ?
+            <React.Fragment>
+                <IndependentSchVisualization
+                    inputArray={this.state.inputForVisualization}
+                    numOfMachines={this.state.numOfMachinesForVisualization}
+                    currentStep={this.state.currentStep}
+                    currentHistory={currentHistory}
+                    makeSpan={this.state.makeSpan}
+                    visualize={this.state.visualize}>
+                </IndependentSchVisualization>
+                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+            </React.Fragment> : <React.Fragment></React.Fragment>;
 
         return (<React.Fragment>
             <h3>Unrelated Machines</h3>
@@ -108,16 +125,7 @@ class IndependentScheduling extends Component {
             </button>
             <br />
             <br />
-            <IndependentSchVisualization
-                inputArray={this.state.inputForVisualization}
-                numOfMachines={this.state.numOfMachinesForVisualization}
-                currentStep={this.state.currentStep}
-                loadsFromHistory={loadsFromHistory}
-                makeSpan={this.state.makeSpan}
-                visualize={this.state.visualize}>
-            </IndependentSchVisualization>
-            <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-            <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+            {visualization}
         </React.Fragment>);
     }
 }

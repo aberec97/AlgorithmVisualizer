@@ -71,15 +71,18 @@ class PagingAlgorithm extends Component {
             if (cache.length < cache_size && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
-                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache had room for it so we inserted it.";
             }
             else if (!cache.includes(currentElement)) {
-                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + cache.shift() + " (FIFO always removes the first cache element). +1 insertion.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache was full so we needed to replace " + cache.shift() + " (FIFO always removes the first cache element). +1 insertion.";
                 cache.push(currentElement);
                 cost++;
             }
             else {
-                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
+                explanation = "The previous input element was " + currentElement +
+                    ". It was already in the cache so we didn't need to do anything.";
             }
             history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
         }
@@ -101,7 +104,8 @@ class PagingAlgorithm extends Component {
             if (cache.length < cache_size && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
-                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache had room for it so we inserted it.";
             } else if (!cache.includes(currentElement)) {
                 let order = [];
                 for (let j = inputUntilNow.length - 1; j >= 0; j--) {
@@ -111,12 +115,14 @@ class PagingAlgorithm extends Component {
                     }
                 }
                 let elementToRemove = order[order.length - 1];
-                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + elementToRemove + " (LRU always removes the least recently used element). +1 insertion.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache was full so we needed to replace " + elementToRemove + " (LRU always removes the least recently used element). +1 insertion.";
                 cache.splice(cache.indexOf(elementToRemove), 1);
                 cache.push(currentElement);
                 cost++;
             } else {
-                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
+                explanation = "The previous input element was " + currentElement +
+                    ". It was already in the cache so we didn't need to do anything.";
             }
             history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
             inputUntilNow.push(currentElement);
@@ -136,7 +142,8 @@ class PagingAlgorithm extends Component {
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
             if (cache.length < cache_size && !cache.includes(currentElement)) {
-                explanation = "The previous input element was " + currentElement + ". Cache had room for it so we inserted it.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache had room for it so we inserted it.";
                 cache.push(currentElement);
                 cost++;
             }
@@ -157,11 +164,14 @@ class PagingAlgorithm extends Component {
                 } else {
                     elementToRemove = nextCachePos[nextCachePos.length - 1];
                 }
-                explanation = "The previous input element was " + currentElement + ". Cache was full so we needed to replace " + elementToRemove + " (LFD always removes the element that will be needed last). +1 insertion.";
+                explanation = "The previous input element was " + currentElement +
+                    ". Cache was full so we needed to replace " + elementToRemove +
+                    " (LFD always removes the element that will be needed last). +1 insertion.";
                 cache[cache.indexOf(elementToRemove)] = currentElement;
                 cost++;
             } else {
-                explanation = "The previous input element was " + currentElement + ". It was already in the cache so we didn't need to do anything.";
+                explanation = "The previous input element was " + currentElement +
+                    ". It was already in the cache so we didn't need to do anything.";
             }
 
             history.set(Number(i + 1), { cache: cache.slice(), explanation: explanation });
@@ -203,7 +213,8 @@ class PagingAlgorithm extends Component {
             currentHistory = this.state.history.get(this.state.currentStep);
         }
 
-        let costVisualization = this.state.currentStep === this.state.inputArray.length ? <p>The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}</p> : <br />;
+        let costVisualization = this.state.currentStep === this.state.inputArray.length ?
+            <p>The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}</p> : <br />;
 
         let visualization = this.state.isReadyForVisualization ?
             <div>

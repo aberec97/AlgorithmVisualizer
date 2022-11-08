@@ -52,7 +52,8 @@ class StandardScheduling extends Component {
         }
 
         let history = new Map();
-        history.set(0, machines.slice());
+        let explanation = "";
+        history.set(0, { machines: machines.slice(), explanation: explanation });
 
         let minimumLoad = Number.MAX_VALUE;
         for (let i = 0; i < input.length; i++) {
@@ -61,9 +62,11 @@ class StandardScheduling extends Component {
                     minimumLoad = machines[j];
                 }
             }
+            explanation = "The previous job was: " + input[i] + ", we scheduled it on the " +
+                (machines.indexOf(minimumLoad) + 1) + ". machine, because it was the first one available.";
             machines[machines.indexOf(minimumLoad)] += Number(input[i]);
             minimumLoad += Number(input[i]);
-            history.set(Number(i + 1), machines.slice());
+            history.set(Number(i + 1), { machines: machines.slice(), explanation: explanation });
         }
 
         let makeSpan = 0;
@@ -72,17 +75,30 @@ class StandardScheduling extends Component {
                 makeSpan = machines[j];
             }
         }
-        console.log("machines = ", machines);
-        console.log("makespan: ", makeSpan);
         this.setState({ makeSpan, history, visualize: true, currentStep: 0 });
     }
 
     render() {
-        let loadsFromHistory;
+        let currentHistory;
 
         if (this.state.makeSpan > 0) {
-            loadsFromHistory = this.state.history.get(this.state.currentStep);
+            currentHistory = this.state.history.get(this.state.currentStep);
         }
+
+        let visualization = this.state.visualize ?
+            <React.Fragment>
+                <StandardSchVisualization
+                    inputArray={this.state.inputForVisualization}
+                    numOfMachines={this.state.numOfMachinesForVisualization}
+                    currentStep={this.state.currentStep}
+                    currentHistory={currentHistory}
+                    makeSpan={this.state.makeSpan}
+                >
+                </StandardSchVisualization>
+                <br />
+                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+            </React.Fragment> : <React.Fragment></React.Fragment>;
 
         return (
             <React.Fragment>
@@ -110,19 +126,7 @@ class StandardScheduling extends Component {
                     Run LIST algorithm
                 </button>
                 <br />
-                <br />
-                <StandardSchVisualization
-                    inputArray={this.state.inputForVisualization}
-                    numOfMachines={this.state.numOfMachinesForVisualization}
-                    currentStep={this.state.currentStep}
-                    loadsFromHistory={loadsFromHistory}
-                    makeSpan={this.state.makeSpan}
-                    visualize={this.state.visualize}
-                >
-                </StandardSchVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-
+                {visualization}
             </React.Fragment>
         );
     }

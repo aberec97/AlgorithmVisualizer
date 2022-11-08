@@ -50,13 +50,10 @@ class DependentScheduling extends Component {
             machines.push(Number(0));
         }
 
-        console.log("numofMachines: ", numOfMachines);
-
         let history = new Map();
-        history.set(0, machines.slice());
-
+        let explanation = "";
+        history.set(0, { machines: machines.slice(), explanation: explanation });
         let machineSpeeds = this.state.machineSpeeds;
-
         for (let i = 0; i < input.length; i++) {
             let job = Number(input[i]);
             let smallestLoad = Number.MAX_VALUE;
@@ -71,10 +68,10 @@ class DependentScheduling extends Component {
                 }
             }
             machines[indexOfSmallestLoad] += nextLoad;
-            history.set(Number(i + 1), machines.slice());
+            explanation = "The previous job was: " + input[i] + ", we scheduled it on the " +
+                (indexOfSmallestLoad + 1) + ". machine to minimize the makespan.";
+            history.set(Number(i + 1), { machines: machines.slice(), explanation: explanation });
         }
-
-        console.log("history: ", history);
 
         let makeSpan = 0;
         for (let i = 0; i < machines.length; i++) {
@@ -87,11 +84,25 @@ class DependentScheduling extends Component {
     }
 
     render() {
-        let loadsFromHistory;
-
+        let currentHistory;
         if (this.state.makeSpan > 0) {
-            loadsFromHistory = this.state.history.get(this.state.currentStep);
+            currentHistory = this.state.history.get(this.state.currentStep);
         }
+
+        let visualization = this.state.visualize ?
+            <React.Fragment>
+                <StandardSchVisualization
+                    inputArray={this.state.inputForVisualization}
+                    numOfMachines={this.state.machineSpeedsForVisualization}
+                    currentStep={this.state.currentStep}
+                    currentHistory={currentHistory}
+                    makeSpan={this.state.makeSpan}
+                    visualize={this.state.visualize}
+                >
+                </StandardSchVisualization>
+                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+            </React.Fragment> : <React.Fragment></React.Fragment>
 
         return (
             <React.Fragment>
@@ -116,17 +127,7 @@ class DependentScheduling extends Component {
                 </button>
                 <br />
                 <br />
-                <StandardSchVisualization
-                    inputArray={this.state.inputForVisualization}
-                    numOfMachines={this.state.machineSpeedsForVisualization}
-                    currentStep={this.state.currentStep}
-                    loadsFromHistory={loadsFromHistory}
-                    makeSpan={this.state.makeSpan}
-                    visualize={this.state.visualize}
-                >
-                </StandardSchVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                {visualization}
             </React.Fragment>
         );
     }
