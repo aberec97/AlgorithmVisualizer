@@ -10,7 +10,8 @@ class KServerAlgorithm extends Component {
         range: [],
         inputForVisualization: '',
         startConfigForVisualization: '',
-        selectedAlgorithm: ''
+        selectedAlgorithm: '',
+        visualize: false
     }
 
     nextStep = () => {
@@ -66,7 +67,10 @@ class KServerAlgorithm extends Component {
             default: result = null;
         }
         let range = this.findRange(this.props.startConfig, this.props.input);
-        this.setState({ cost: result['cost'], history: result['history'], range, currentStep: 0, selectedAlgorithm: selectedAlg, inputForVisualization: input, startConfigForVisualization: startConfig });
+        this.setState({
+            cost: result['cost'], history: result['history'], range, visualize: true,
+            currentStep: 0, selectedAlgorithm: selectedAlg, inputForVisualization: input, startConfigForVisualization: startConfig
+        });
     }
 
     distance(x, y) {
@@ -104,15 +108,17 @@ class KServerAlgorithm extends Component {
         let serverPositions = start.map(s => Number(s));
         serverPositions.sort((a, b) => a - b);
         let cost = Number(0);
-
         let history = new Map();
-        history.set(Number(0), serverPositions.slice());
+        let explanation = "";
+        history.set(Number(0), { serverPositions: serverPositions.slice(), explanation });
 
         for (let i = 0; i < input.length; i++) {
             let request = Number(input[i]);
             let allPositions = this.compareRequestToServers(serverPositions, request);
             if (serverPositions.length === allPositions.length) {
-                history.set(Number(i + 1), serverPositions.slice());
+                explanation = "The previous request asked for location " + request +
+                    ". We already had a server there so we didn't have to do anything.";
+                history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                 continue;
             }
             for (let j = 0; j < allPositions.length; j++) {
@@ -120,16 +126,22 @@ class KServerAlgorithm extends Component {
                 if (currentElement === request) {
                     if (currentElement === allPositions[0]) {
                         let nextElement = allPositions[j + 1];
-                        cost += this.distance(request, nextElement);
+                        let distance = this.distance(request, nextElement);
+                        cost += distance;
                         this.moveServer(serverPositions, nextElement, request);
-                        history.set(Number(i + 1), serverPositions.slice());
+                        explanation = "The previous request asked for location " + request +
+                            ". We moved a server there from " + nextElement + ", the distance was " + distance + ". (+" + distance + ")";
+                        history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else if (currentElement === allPositions[allPositions.length - 1]) {
                         let prevElement = allPositions[j - 1];
-                        cost += this.distance(request, prevElement);
+                        let distance = this.distance(request, prevElement);
+                        cost += distance;
                         this.moveServer(serverPositions, prevElement, request);
-                        history.set(Number(i + 1), serverPositions.slice());
+                        explanation = "The previous request asked for location " + request +
+                            ". We moved a server there from " + prevElement + ", the distance was " + distance + ". (+" + distance + ")";
+                        history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else {
@@ -141,12 +153,18 @@ class KServerAlgorithm extends Component {
                             cost += 2 * distanceRequestPrevElement;
                             this.moveServer(serverPositions, prevElement, request);
                             this.moveServer(serverPositions, nextElement, nextElement - distanceRequestPrevElement);
-                            history.set(Number(i + 1), serverPositions.slice());
+                            explanation = "The previous request asked for location " + request +
+                                ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
+                                " towards the requested location. This means we covered the distance of " + distanceRequestPrevElement + " twice. (+" + cost + ")";
+                            history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         } else {
                             cost += 2 * distanceRequestNextElement;
                             this.moveServer(serverPositions, nextElement, request);
                             this.moveServer(serverPositions, prevElement, prevElement + distanceRequestNextElement);
-                            history.set(Number(i + 1), serverPositions.slice());
+                            explanation = "The previous request asked for location " + request +
+                                ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
+                                " towards the requested location. This means we covered the distance of " + distanceRequestNextElement + " twice. (+" + cost + ")";
+                            history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         }
                         break;
                     }
@@ -161,7 +179,6 @@ class KServerAlgorithm extends Component {
         let serverPositions = start.map(s => Number(s));
         serverPositions.sort((a, b) => a - b);
         let cost = Number(0);
-
         let history = new Map();
         history.set(Number(0), serverPositions.slice());
 
@@ -220,23 +237,18 @@ class KServerAlgorithm extends Component {
         let inputString = this.state.inputForVisualization.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
-        let servers = [];
-        if (this.state.cost >= 0) servers = this.state.history.get(this.state.currentStep);
+        let currentHistory = [];
+        if (this.state.cost >= 0) currentHistory = this.state.history.get(this.state.currentStep);
 
-        return (
-            <div>
-                <p>You selected {this.state.selectedAlgorithm} with &#123; {startConfigStringForRender} &#125; starting configuration
-                    and &#123; {inputStringForRender} &#125; input. Press Run to see the result!
+        let visualization = this.state.visualize ?
+            <React.Fragment>
+                <p style={{ marginTop: "1em" }}>
+                    You selected {this.state.selectedAlgorithm} with ( {startConfigStringForRender} ) starting configuration
+                    and the following requests: &#123; {inputStringForRender} &#125;
                 </p>
-                <button
-                    className='btn btn-success'
-                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.input, this.props.startConfig)}>
-                    Run
-                </button>
-                <br />
                 <KServerVisualization
                     cost={this.state.cost}
-                    servers={servers}
+                    currentHistory={currentHistory}
                     selectedAlgorithm={this.state.selectedAlgorithm}
                     range={this.state.range}
                     currentStep={this.state.currentStep}
@@ -250,7 +262,17 @@ class KServerAlgorithm extends Component {
                     </div>
                     <br />
                 </div>
-            </div>
+            </React.Fragment> : <React.Fragment></React.Fragment>;
+
+        return (
+            <React.Fragment>
+                <button
+                    className='btn btn-success'
+                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.input, this.props.startConfig)}>
+                    Run
+                </button>
+                {visualization}
+            </React.Fragment>
         );
     }
 }

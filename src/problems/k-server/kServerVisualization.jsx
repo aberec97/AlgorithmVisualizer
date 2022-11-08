@@ -7,10 +7,13 @@ class KServerVisualization extends Component {
         let locations = [];
 
         for (let i = this.props.range[0]; i <= this.props.range[1]; i++) {
-            this.props.servers.includes(i) ?
+            this.props.currentHistory['serverPositions'].includes(i) ?
                 locations.push(<div key={i} className='location'><div className='server'></div><p className='loc-label'>{i}</p></div>) :
                 locations.push(<div key={i} className='location'><p className='loc-label'>{i}</p></div>);
         }
+
+        let cost = this.props.currentStep === this.props.input.length ?
+            <p>The cost of running {this.props.selectedAlgorithm} on this input is {this.props.cost}</p> : <p><br /></p>
 
         return (
             <React.Fragment>
@@ -19,9 +22,9 @@ class KServerVisualization extends Component {
                         {locations}
                     </div>
                 </div>
-                The cost of running {this.props.selectedAlgorithm} on this input is {this.props.cost}
-                <br />
-                Current step: {this.props.currentStep} / {this.props.input.length}
+                <p className='explanation'>{this.props.currentHistory['explanation']}</p>
+                {cost}
+                <p>Current step: {this.props.currentStep} / {this.props.input.length}</p>
             </React.Fragment>
         );
     }
