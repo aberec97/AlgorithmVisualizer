@@ -180,13 +180,16 @@ class KServerAlgorithm extends Component {
         serverPositions.sort((a, b) => a - b);
         let cost = Number(0);
         let history = new Map();
-        history.set(Number(0), serverPositions.slice());
+        let explanation = "";
+        history.set(Number(0), { serverPositions: serverPositions.slice(), explanation });
 
         for (let i = 0; i < input.length; i++) {
             let request = Number(input[i]);
             let allPositions = this.compareRequestToServers(serverPositions, request);
             if (serverPositions.length === allPositions.length) {
-                history.set(Number(i + 1), serverPositions.slice());
+                explanation = "The previous request asked for location " + request +
+                    ". We already had a server there so we didn't have to do anything.";
+                history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                 continue;
             }
             for (let j = 0; j < allPositions.length; j++) {
@@ -194,16 +197,22 @@ class KServerAlgorithm extends Component {
                 if (currentElement === request) {
                     if (currentElement === allPositions[0]) {
                         let nextElement = allPositions[j + 1];
-                        cost += this.distance(request, nextElement);
+                        let distance = this.distance(request, nextElement);
+                        cost += distance;
                         this.moveServer(serverPositions, nextElement, request);
-                        history.set(Number(i + 1), serverPositions.slice());
+                        explanation = "The previous request asked for location " + request +
+                            ". We moved a server there from " + nextElement + ", the distance was " + distance + ". (+" + distance + ")";
+                        history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else if (currentElement === allPositions[allPositions.length - 1]) {
                         let prevElement = allPositions[j - 1];
-                        cost += this.distance(request, prevElement);
+                        let distance = this.distance(request, prevElement);
+                        cost += distance;
                         this.moveServer(serverPositions, prevElement, request);
-                        history.set(Number(i + 1), serverPositions.slice());
+                        explanation = "The previous request asked for location " + request +
+                            ". We moved a server there from " + prevElement + ", the distance was " + distance + ". (+" + distance + ")";
+                        history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else {
@@ -214,11 +223,17 @@ class KServerAlgorithm extends Component {
                         if (distanceRequestPrevElement <= distanceRequestNextElement) {
                             cost += distanceRequestPrevElement;
                             this.moveServer(serverPositions, prevElement, request);
-                            history.set(Number(i + 1), serverPositions.slice());
+                            explanation = "The previous request asked for location " + request +
+                                ", it was between two servers, but the server at " + prevElement +
+                                " was closer so we moved it towards the requested location. (+" + distanceRequestPrevElement + ")";
+                            history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         } else {
                             cost += distanceRequestNextElement;
                             this.moveServer(serverPositions, nextElement, request);
-                            history.set(Number(i + 1), serverPositions.slice());
+                            explanation = "The previous request asked for location " + request +
+                                ", it was between two servers, but the server at " + nextElement +
+                                " was closer so we moved it towards the requested location. (+" + distanceRequestNextElement + ")";
+                            history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         }
                         break;
                     }
