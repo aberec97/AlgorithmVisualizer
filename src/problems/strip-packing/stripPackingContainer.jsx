@@ -45,6 +45,7 @@ class StripPackingContainer extends Component {
         let shelves = [];
         let cost = 0;
         let history = new Map();
+        let explanation = "";
         history.set(0, {});
 
         for (let i = 0; i < input.length; i++) {
@@ -68,7 +69,12 @@ class StripPackingContainer extends Component {
                     open: true
                 });
                 cost += higherNumber;
-                history.set(i + 1, { item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber, newShelf: true });
+                explanation = "The previous item was (" + item +
+                    "), we didn't have a shelf yet so we opened a new one with " + higherNumber + " height.";
+                history.set(i + 1, {
+                    item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber,
+                    newShelf: true, explanation: explanation
+                });
             }
             else {
                 for (let j = 0; j < shelves.length; j++) {
@@ -86,7 +92,9 @@ class StripPackingContainer extends Component {
                     else if (shelf.open && shelf.height === higherNumber && Number(shelf.fullness + itemWidth) <= 1) {
                         shelf.items.push(item);
                         shelf.fullness += itemWidth;
-                        history.set(i + 1, { item: item, shelfIndex: j, shelfHeight: higherNumber, newShelf: false });
+                        explanation = "The previous item was (" + item +
+                            "), we put it on the " + j + ". shelf.";
+                        history.set(i + 1, { item: item, shelfIndex: j, shelfHeight: higherNumber, newShelf: false, explanation: explanation });
                         break;
                     }
                     else {
@@ -100,7 +108,9 @@ class StripPackingContainer extends Component {
                             open: true
                         });
                         cost += higherNumber;
-                        history.set(i + 1, { item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber, newShelf: true });
+                        explanation = "The previous item was (" + item +
+                            "), we needed to open a new shelf with a height of " + higherNumber + ".";
+                        history.set(i + 1, { item: item, shelfIndex: shelves.length - 1, shelfHeight: higherNumber, newShelf: true, explanation: explanation });
                         break;
                     }
                 }

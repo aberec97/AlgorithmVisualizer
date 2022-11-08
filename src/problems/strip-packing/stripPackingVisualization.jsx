@@ -36,13 +36,22 @@ class StripPackingVisualization extends Component {
                 itemsToShelves[index].push(<div key={i} style={{ width: width, height: height }} className="item">{itemWidth}, {itemHeight}</div>);
             }
 
-            shelvesForRender[index] = <div key={i} className='shelfAndItem'><label>{shelfHeightValue}</label><div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}</div></div>;
+            shelvesForRender[index] =
+                <div key={i} className='shelfAndItem'>
+                    <label>{shelfHeightValue}</label>
+                    <div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}
+                    </div>
+                </div>;
         }
 
         let inputString = this.props.inputArray.map(e => e + ";").toString();
         let inputStringForRender = inputString.replace(/,/g, " ");
 
         let totalHeight = this.props.cost * heightMultiplier + "em";
+        let costViz = this.props.currentStep === this.props.inputArray.length ?
+            <p>The cost of running Next Fit Shelf on this input is {this.props.cost}.</p> : <p><br /></p>;
+
+
         return (
             <React.Fragment>
                 Your input was {inputStringForRender} with an R value of {this.props.rValue}.
@@ -52,10 +61,9 @@ class StripPackingVisualization extends Component {
                         {shelvesForRender}
                     </div>
                 </div>
-                The cost of running Next Fit Shelf on this input is {this.props.cost}.
-                <br />
-                current step = {this.props.currentStep} / {this.props.inputArray.length}
-                <br />
+                <p className='explanation'>{history.get(this.props.currentStep)['explanation']}</p>
+                {costViz}
+                <p>Current step: {this.props.currentStep} / {this.props.inputArray.length}</p>
                 <Button variant="light" onClick={this.props.previousStep}>&lt;</Button>
                 <Button variant="light" onClick={this.props.nextStep}>&gt;</Button>
             </React.Fragment>
