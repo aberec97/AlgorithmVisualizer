@@ -16,9 +16,7 @@ class StandardSchVisualization extends Component {
             }
         }
         else {
-            console.log("input array:", this.props.inputArray);
-            console.log("numOfMachines:", this.props.numOfMachines);
-            return <React.Fragment>Please provide an input!</React.Fragment>;
+            return <React.Fragment>Please provide an input!<br /></React.Fragment>;
         }
 
         let inputString = jobs.toString();

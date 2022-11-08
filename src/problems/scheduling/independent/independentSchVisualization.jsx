@@ -24,7 +24,7 @@ class IndependentSchVisualization extends Component {
             }
         }
         else {
-            return <React.Fragment>Please provide an input!</React.Fragment>;
+            return <React.Fragment>Please provide an input!<br /></React.Fragment>;
         }
 
         let inputString = jobs.map(j => j + ";").toString();

@@ -54,23 +54,27 @@ class ListAccessAlgorithm extends Component {
         return linkedList;
     }
 
-    moveToFront(array, index, elment) {
+    moveToFront(array, index, element) {
         array.splice(index, 1);
-        array.splice(0, 0, elment);
+        array.splice(0, 0, element);
     }
 
     solveWithMTF(length, queries) {
         let linkedList = this.createLinkedList(length);
         let cost = Number(0);
         let history = new Map();
-        history.set(0, linkedList.slice());
+        let explanation = "";
+        history.set(0, { linkedList: linkedList.slice(), explanation: explanation });
 
         for (let i = 0; i < queries.length; i++) {
             let queriedElement = Number(queries[i]);
             let queriedElementIndex = linkedList.indexOf(queriedElement);
-            cost += Number(queriedElementIndex) + 1;
+            let currentCost = Number(queriedElementIndex) + 1;
+            cost += currentCost;
             this.moveToFront(linkedList, queriedElementIndex, queriedElement);
-            history.set(Number(i + 1), linkedList.slice());
+            explanation = "The previous query asked for " + queriedElement + ", it was in the " +
+                (queriedElementIndex + 1) + ". position. The cost of this query is " + currentCost + ".";
+            history.set(Number(i + 1), { linkedList: linkedList.slice(), explanation: explanation });
         }
 
         return { cost, history };
@@ -84,20 +88,27 @@ class ListAccessAlgorithm extends Component {
         }
         let cost = Number(0);
         let history = new Map();
-        history.set(0, linkedList.slice());
+        let explanation = "";
+        history.set(0, { linkedList: linkedList.slice(), explanation: explanation });
 
         for (let i = 0; i < queries.length; i++) {
             let queriedElement = Number(queries[i]);
             let queriedElementIndex = linkedList.indexOf(queriedElement);
             let bitOfQueriedElement = bits[Number(queriedElement) - 1];
+            let bitExplanation = "";
             if (bitOfQueriedElement > 0) {
                 this.moveToFront(linkedList, queriedElementIndex, queriedElement);
                 bitOfQueriedElement = 0;
+                bitExplanation = "It's bit was 1 so we moved it to the front of the list and set the bit to 0."
             } else {
                 bitOfQueriedElement = 1;
+                bitExplanation = "It's bit was 0 so we did not move it to the front of the list and set the bit to 1."
             }
-            cost += Number(queriedElementIndex) + 1;
-            history.set(Number(i + 1), linkedList.slice());
+            let currentCost = Number(queriedElementIndex) + 1;
+            cost += currentCost;
+            explanation = "The previous query asked for " + queriedElement + ", it was in the " +
+                (queriedElementIndex + 1) + ". position. " + bitExplanation + " The cost of this query is " + currentCost + ".";
+            history.set(Number(i + 1), { linkedList: linkedList.slice(), explanation: explanation });
         }
 
         return { cost, history };
@@ -113,33 +124,32 @@ class ListAccessAlgorithm extends Component {
         let inputString = this.state.input.toString();
         let inputStringForRender = inputString.replace(/,/g, ", ");
 
-        let linkedList = <React.Fragment></React.Fragment>;
+        let currentHistory = <React.Fragment></React.Fragment>;
 
         if (!this.state.history) {
             return (<p>Provide an input!</p>);
         }
 
         if (this.state.cost > 0) {
-            linkedList = this.state.history.get(this.state.currentStep);
+            currentHistory = this.state.history.get(this.state.currentStep);
         }
+
+        let cost = this.state.currentStep === this.state.input.length ?
+            <p>The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}</p> : <p><br /></p>;
 
         let visualization = this.state.visualize ?
             <React.Fragment>
                 <br />
                 <p>You selected {this.state.selectedAlgorithm} with the following queries: &#123; {inputStringForRender} &#125; and linked list length of {this.state.length}.</p>
                 <ListAccessVisualization
-                    linkedList={linkedList}
+                    currentHistory={currentHistory}
                     input={this.props.queries}
                     currentStep={this.state.currentStep}>
                 </ListAccessVisualization>
-                <br />
+                {cost}
                 <div>
-                    <div>
-                        <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                        <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-                    </div>
-                    <br />
-                    The cost of running {this.state.selectedAlgorithm} on this input is {this.state.cost}
+                    <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                    <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                 </div>
             </React.Fragment> : <React.Fragment></React.Fragment>;
 
