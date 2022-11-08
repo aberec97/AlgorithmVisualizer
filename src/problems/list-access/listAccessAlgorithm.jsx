@@ -118,7 +118,6 @@ class ListAccessAlgorithm extends Component {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-
     render() {
         if (!this.props.selectedAlgorithm) return <React.Fragment></React.Fragment>;
         let inputString = this.state.input.toString();
