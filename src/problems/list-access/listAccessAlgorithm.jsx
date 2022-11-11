@@ -91,6 +91,7 @@ class ListAccessAlgorithm extends Component {
         let explanation = "";
         history.set(0, { linkedList: linkedList.slice(), explanation: explanation });
 
+
         for (let i = 0; i < queries.length; i++) {
             let queriedElement = Number(queries[i]);
             let queriedElementIndex = linkedList.indexOf(queriedElement);
