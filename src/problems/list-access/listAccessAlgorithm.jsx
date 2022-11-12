@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
 import ListAccessVisualization from './listAccesVisualization';
+import Arrows from '../../common/arrows';
 
 class ListAccessAlgorithm extends Component {
     state = {
@@ -13,23 +13,9 @@ class ListAccessAlgorithm extends Component {
         visualize: false
     }
 
-    nextStep = () => {
-        if (!this.props.queries || this.props.queries.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.props.queries.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
 
     solveWithSelectedAlgorithm(selectedAlg, queries, length) {
         if (!selectedAlg) return null;
@@ -147,10 +133,13 @@ class ListAccessAlgorithm extends Component {
                     currentStep={this.state.currentStep}>
                 </ListAccessVisualization>
                 {cost}
-                <div>
-                    <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                    <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-                </div>
+                <Arrows
+                    input={this.state.input}
+                    history={this.state.history}
+                    cost={this.state.cost}
+                    currentStep={this.state.currentStep}
+                    setCurrentStep={this.setCurrentStep}
+                ></Arrows>
             </React.Fragment> : <React.Fragment></React.Fragment>;
 
         return (

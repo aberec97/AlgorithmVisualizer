@@ -11,23 +11,9 @@ class BinPackingAlgorithm extends Component {
         visualize: false
     }
 
-    nextStep = () => {
-        if (!this.state.input || this.state.input.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.state.input.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
 
     solveWithSelectedAlgorithm(selectedAlg, input) {
         if (!selectedAlg) return null;
@@ -143,7 +129,9 @@ class BinPackingAlgorithm extends Component {
                 input={this.props.input}
                 currentStep={this.state.currentStep}
                 previousStep={this.previousStep}
-                nextStep={this.nextStep}>
+                nextStep={this.nextStep}
+                cost={this.state.cost}
+                setCurrentStep={this.setCurrentStep}>
             </BinPackingVisualization>
             <br />
             <div>

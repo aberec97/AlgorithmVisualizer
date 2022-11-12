@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './strip-packing.css';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../common/arrows';
 
 class StripPackingVisualization extends Component {
 
@@ -64,8 +64,13 @@ class StripPackingVisualization extends Component {
                 <p className='explanation'>{history.get(this.props.currentStep)['explanation']}</p>
                 {costViz}
                 <p>Current step: {this.props.currentStep} / {this.props.inputArray.length}</p>
-                <Button variant="light" onClick={this.props.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.props.nextStep}>&gt;</Button>
+                <Arrows
+                    input={this.props.inputArray}
+                    history={this.props.history}
+                    cost={this.props.cost}
+                    currentStep={this.props.currentStep}
+                    setCurrentStep={this.props.setCurrentStep}
+                ></Arrows>
             </React.Fragment>
         );
     }

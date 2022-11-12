@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Description from '../../../common/description';
 import IndependentSchInput from './independentSchInput';
 import IndependentSchVisualization from './independentSchVisualization';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../../common/arrows';
 
 class IndependentScheduling extends Component {
     state = {
@@ -16,31 +16,16 @@ class IndependentScheduling extends Component {
         numOfMachinesForVisualization: ''
     }
 
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
+
     handleSetInputArray = (inputArray) => {
         this.setState({ inputArray });
     };
 
     handleSetNumOfMachines = (numOfMachines) => {
         this.setState({ numOfMachines });
-    };
-
-    nextStep = () => {
-        const length = this.state.inputArray.length;
-        if (length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
     };
 
     solveWithList(input, numOfMachines) {
@@ -99,8 +84,13 @@ class IndependentScheduling extends Component {
                     makeSpan={this.state.makeSpan}
                     visualize={this.state.visualize}>
                 </IndependentSchVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                <Arrows
+                    input={this.state.inputArray}
+                    history={this.state.history}
+                    cost={this.state.makeSpan}
+                    currentStep={this.state.currentStep}
+                    setCurrentStep={this.setCurrentStep}
+                ></Arrows>
             </React.Fragment> : <React.Fragment></React.Fragment>;
 
         return (<React.Fragment>

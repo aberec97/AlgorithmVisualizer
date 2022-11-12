@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Description from '../../../common/description';
 import DependentSchInput from './dependentSchInput';
 import StandardSchVisualization from '../standard/standardSchVisualization';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../../common/arrows';
 
 class DependentScheduling extends Component {
     state = {
@@ -16,31 +16,16 @@ class DependentScheduling extends Component {
         machineSpeedsForVisualization: ''
     }
 
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
+
     handleSetInputArray = (inputArray) => {
         this.setState({ inputArray });
     };
 
     handleSetMachineSpeeds = (machineSpeeds) => {
         this.setState({ machineSpeeds });
-    };
-
-    nextStep = () => {
-        const length = this.state.inputArray.length;
-        if (length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
     };
 
     solveWithList(input, numOfMachines) {
@@ -100,8 +85,13 @@ class DependentScheduling extends Component {
                     visualize={this.state.visualize}
                 >
                 </StandardSchVisualization>
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                <Arrows
+                    input={this.state.inputArray}
+                    history={this.state.history}
+                    cost={this.state.makeSpan}
+                    currentStep={this.state.currentStep}
+                    setCurrentStep={this.setCurrentStep}
+                ></Arrows>
             </React.Fragment> : <React.Fragment></React.Fragment>
 
         return (

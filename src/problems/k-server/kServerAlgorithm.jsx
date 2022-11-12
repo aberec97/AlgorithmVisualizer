@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../common/arrows';
 import KServerVisualization from './kServerVisualization';
 
 class KServerAlgorithm extends Component {
@@ -14,23 +14,9 @@ class KServerAlgorithm extends Component {
         visualize: false
     }
 
-    nextStep = () => {
-        if (!this.props.input || this.props.input.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.props.input.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
 
     findRange(startConfig, input) {
         let confCopy = [...startConfig]
@@ -271,10 +257,13 @@ class KServerAlgorithm extends Component {
                 </KServerVisualization>
                 <br />
                 <div>
-                    <div>
-                        <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                        <Button variant="light" onClick={this.nextStep}>&gt;</Button>
-                    </div>
+                    <Arrows
+                        input={this.props.input}
+                        history={this.state.history}
+                        cost={this.state.cost}
+                        currentStep={this.state.currentStep}
+                        setCurrentStep={this.setCurrentStep}
+                    ></Arrows>
                     <br />
                 </div>
             </React.Fragment> : <React.Fragment></React.Fragment>;

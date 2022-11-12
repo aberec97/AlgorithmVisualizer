@@ -15,23 +15,9 @@ class StripPackingContainer extends Component {
         rValueForVisualization: ''
     }
 
-    nextStep = () => {
-        if (this.state.inputArray.length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(this.state.inputArray.length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
-    };
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
 
     handleSetInputArray = (inputArray) => {
         this.setState({ inputArray });
@@ -155,8 +141,7 @@ class StripPackingContainer extends Component {
                     history={this.state.history}
                     cost={this.state.cost}
                     visualize={this.state.visualize}
-                    previousStep={this.previousStep}
-                    nextStep={this.nextStep}
+                    setCurrentStep={this.setCurrentStep}
                 >
                 </StripPackingVisualization>
             </React.Fragment>

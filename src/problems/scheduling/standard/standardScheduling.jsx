@@ -3,18 +3,22 @@ import Description from '../../../common/description';
 import SimpleInputController from '../../../common/simpleInputController';
 import './../scheduling.css';
 import StandardSchVisualization from './standardSchVisualization';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../../common/arrows';
 
 class StandardScheduling extends Component {
     state = {
         inputArray: '',
         numOfMachines: '',
         currentStep: 0,
-        makeSpan: '',
+        makeSpan: 0,
         history: new Map(),
         visualize: false,
         inputForVisualization: '',
         numOfMachinesForVisualization: ''
+    }
+
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
     }
 
     handleSetInputArray = (inputArray) => {
@@ -23,25 +27,6 @@ class StandardScheduling extends Component {
 
     handleSetNumOfMachines = (numOfMachines) => {
         this.setState({ numOfMachines });
-    };
-
-    nextStep = () => {
-        const length = this.state.inputArray.length;
-        if (length === 0 || !this.state.history || this.state.cost === 0) return;
-        const currentStep = this.state.currentStep;
-        const nextStep = currentStep + 1;
-        if (Number(currentStep) < Number(length)) {
-            this.setState({ currentStep: nextStep });
-        }
-    };
-
-    previousStep = () => {
-        if (!this.state.history || this.state.cost === 0) return;
-        let currentStep = this.state.currentStep;
-        let prevStep = currentStep - 1;
-        if (Number(currentStep) > 0) {
-            this.setState({ currentStep: prevStep });
-        }
     };
 
     solveWithList(input, numOfMachines) {
@@ -96,8 +81,13 @@ class StandardScheduling extends Component {
                 >
                 </StandardSchVisualization>
                 <br />
-                <Button variant="light" onClick={this.previousStep}>&lt;</Button>
-                <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                <Arrows
+                    input={this.state.inputArray}
+                    history={this.state.history}
+                    cost={this.state.makeSpan}
+                    currentStep={this.state.currentStep}
+                    setCurrentStep={this.setCurrentStep}
+                ></Arrows>
             </React.Fragment> : <React.Fragment></React.Fragment>;
 
         return (

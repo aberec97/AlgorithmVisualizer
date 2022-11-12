@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './bin-packing.css';
-import Button from 'react-bootstrap/Button';
+import Arrows from '../../common/arrows';
 
 class BinPackingVisualization extends Component {
 
@@ -42,10 +42,13 @@ class BinPackingVisualization extends Component {
                 </div>
                 Current step: {this.props.currentStep} / {inputLength}
                 <p className='explanation'>{this.props.history.get(this.props.currentStep)['explanation']}</p>
-                <div>
-                    <Button variant="light" onClick={this.props.previousStep}>&lt;</Button>
-                    <Button variant="light" onClick={this.props.nextStep}>&gt;</Button>
-                </div>
+                <Arrows
+                    input={this.props.input}
+                    history={this.props.history}
+                    cost={this.props.cost}
+                    currentStep={this.props.currentStep}
+                    setCurrentStep={this.props.setCurrentStep}
+                ></Arrows>
             </React.Fragment>
         );
     }
