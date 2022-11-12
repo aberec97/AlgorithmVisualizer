@@ -85,16 +85,16 @@ class ListAccessAlgorithm extends Component {
             let bitExplanation = "";
             if (bitOfQueriedElement > 0) {
                 this.moveToFront(linkedList, queriedElementIndex, queriedElement);
-                bitOfQueriedElement = 0;
+                bits[Number(queriedElement) - 1] = 0;
                 bitExplanation = "It's bit was 1 so we moved it to the front of the list and set the bit to 0."
             } else {
-                bitOfQueriedElement = 1;
+                bits[Number(queriedElement) - 1] = 1;
                 bitExplanation = "It's bit was 0 so we did not move it to the front of the list and set the bit to 1."
             }
             let currentCost = Number(queriedElementIndex) + 1;
             cost += currentCost;
             explanation = "The previous query asked for " + queriedElement + ", it was in the " +
-                (queriedElementIndex + 1) + ". position. " + bitExplanation + " The cost of this query is " + currentCost + ".";
+                (queriedElementIndex + 1) + ". position. " + bitExplanation + " +" + currentCost + " cost.";
             history.set(Number(i + 1), { linkedList: linkedList.slice(), explanation: explanation });
         }
 
