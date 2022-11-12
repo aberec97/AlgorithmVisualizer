@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './strip-packing.css';
 import Arrows from '../../common/arrows';
+import { visualizeInput } from '../../common/utilities';
 
 class StripPackingVisualization extends Component {
 
@@ -43,6 +44,7 @@ class StripPackingVisualization extends Component {
                     </div>
                 </div>;
         }
+        let elements = visualizeInput(this.props.inputArray.map(e => e + " "), this.props.currentStep);
 
         let inputString = this.props.inputArray.map(e => e + ";").toString();
         let inputStringForRender = inputString.replace(/,/g, " ");
@@ -60,6 +62,9 @@ class StripPackingVisualization extends Component {
                     <div style={{ height: totalHeight }} className='loading-bay'>
                         {shelvesForRender}
                     </div>
+                </div>
+                <div className='input-holder'>
+                    {elements}
                 </div>
                 <p className='explanation'>{history.get(this.props.currentStep)['explanation']}</p>
                 {costViz}

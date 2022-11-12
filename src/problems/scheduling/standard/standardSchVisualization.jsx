@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { visualizeInput } from '../../../common/utilities';
 
 class StandardSchVisualization extends Component {
     render() {
@@ -6,6 +7,9 @@ class StandardSchVisualization extends Component {
         let numOfMachines;
         let machinesForRender = [];
         let loadsFromHistory = [];
+
+        let elements = visualizeInput(this.props.inputArray, this.props.currentStep);
+
         if (this.props.inputArray && this.props.inputArray.length > 0 && this.props.numOfMachines > 0) {
             jobs = this.props.inputArray;
             numOfMachines = this.props.numOfMachines;
@@ -27,7 +31,10 @@ class StandardSchVisualization extends Component {
 
         return (
             <React.Fragment>
-                The input is &#123; {inputStringForRender} &#125; with {numOfMachines} machines.
+                <p style={{ margin: 0, marginTop: "1em" }}>The input is &#123; {inputStringForRender} &#125; with {numOfMachines} machines.</p>
+                <div className='input-holder'>
+                    {elements}
+                </div>
                 <div className='machines-loads'>
                     <div className='machines'>
                         {machinesForRender}

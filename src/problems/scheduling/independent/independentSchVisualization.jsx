@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { visualizeInput } from '../../../common/utilities';
 
 class IndependentSchVisualization extends Component {
     state = {
@@ -6,16 +7,21 @@ class IndependentSchVisualization extends Component {
     }
     render() {
 
-        if (!this.props.visualize) {
-            return <React.Fragment>Run the algorithm! <br /> </React.Fragment>;
+        if (!this.props.visualize || !this.props.inputArray) {
+            return <React.Fragment>Run the algorithm or provide a valid input!<br /></React.Fragment>;
         }
 
         let jobs = [];
         let numOfMachines;
         let machinesForRender = [];
         let loadsFromHistory = [];
-        if (this.props.inputArray && this.props.inputArray.length > 0 && this.props.numOfMachines > 0) {
-            jobs = this.props.inputArray;
+
+        let inputArray = this.props.inputArray;
+
+        let elements = visualizeInput(inputArray.map(e => e + " "), this.props.currentStep);
+
+        if (inputArray && inputArray.length > 0 && this.props.numOfMachines > 0) {
+            jobs = inputArray;
             numOfMachines = this.props.numOfMachines;
             loadsFromHistory = this.props.currentHistory['machines'];
             for (let i = 0; i < numOfMachines; i++) {
@@ -31,11 +37,16 @@ class IndependentSchVisualization extends Component {
         let inputStringForRender = inputString.replace(/,/g, " ");
 
         let makeSpan = this.props.currentStep === this.props.inputArray.length ?
-            <React.Fragment>Makespan = {this.props.makeSpan}</React.Fragment> : <React.Fragment></React.Fragment>;
+            <p>Makespan = {this.props.makeSpan}</p> : <React.Fragment></React.Fragment>;
 
         return (
             <React.Fragment>
-                The input is &#123; {inputStringForRender} &#125; with {numOfMachines} machines.
+                <p style={{ margin: 0, marginTop: "1em" }}>
+                    The input is &#123; {inputStringForRender} &#125; with {numOfMachines} machines.
+                </p>
+                <div className='input-holder'>
+                    {elements}
+                </div>
                 <div className='machines-loads'>
                     <div className='machines'>
                         {machinesForRender}
@@ -44,7 +55,6 @@ class IndependentSchVisualization extends Component {
                 Current step: {this.props.currentStep} / {this.props.inputArray.length}
                 <p className='explanation'>{this.props.currentHistory['explanation']}</p>
                 {makeSpan}
-                <br />
             </React.Fragment>
         );
     }

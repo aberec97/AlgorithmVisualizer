@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './bin-packing.css';
 import Arrows from '../../common/arrows';
+import { visualizeInput } from '../../common/utilities';
 
 class BinPackingVisualization extends Component {
 
@@ -29,14 +30,17 @@ class BinPackingVisualization extends Component {
                     <div key={i} style={{ height: fullnessIndicator }} className='bin-item'>{currentItem / 10}</div> :
                     <div key={i} style={{ height: fullnessIndicator }} className='bin-item'>0.{currentItem}</div>);
         }
+        let elements = visualizeInput(this.props.input, this.props.currentStep);
         let visualize = [];
-
         for (let i = 0; i < binsForVisualization.length; i++) {
             visualize.push(<div key={i} className='bin'>{binsForVisualization[i]}</div>)
         }
 
         return (
             <React.Fragment>
+                <div className='input-holder'>
+                    {elements}
+                </div>
                 <div className='bin-container'>
                     {visualize}
                 </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './kServer.css';
+import { visualizeInput } from '../../common/utilities';
 
 class KServerVisualization extends Component {
     state = {}
@@ -11,12 +12,16 @@ class KServerVisualization extends Component {
                 locations.push(<div key={i} className='location'><div className='server'></div><p className='loc-label'>{i}</p></div>) :
                 locations.push(<div key={i} className='location'><p className='loc-label'>{i}</p></div>);
         }
+        let elements = visualizeInput(this.props.input, this.props.currentStep);
 
         let cost = this.props.currentStep === this.props.input.length ?
             <p>The cost of running {this.props.selectedAlgorithm} on this input is {this.props.cost}</p> : <p><br /></p>
 
         return (
             <React.Fragment>
+                <div className='input-holder'>
+                    {elements}
+                </div>
                 <div className="wrap">
                     <div className="links">
                         {locations}

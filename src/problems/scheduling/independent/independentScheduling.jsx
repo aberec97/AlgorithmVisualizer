@@ -52,8 +52,8 @@ class IndependentScheduling extends Component {
                 }
             }
             machines[indexToPutLoadOn] += Number(newLoad);
-            explanation = "The previous job was: (" + input[i] + "), we scheduled it on the " + (indexToPutLoadOn + 1) +
-                ". machine, because it is the fastest at handling this job (or to minimize the makespan).";
+            explanation = "The previous job was (" + input[i] + "), we scheduled it to the " + (indexToPutLoadOn + 1) +
+                ". machine, because it was the fastest at handling that job (or to minimize the makespan).";
             history.set(i + 1, { machines: machines.slice(), explanation: explanation });
         }
 

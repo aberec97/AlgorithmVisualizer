@@ -39,22 +39,25 @@ class DependentScheduling extends Component {
         let explanation = "";
         history.set(0, { machines: machines.slice(), explanation: explanation });
         let machineSpeeds = this.state.machineSpeeds;
+        let speed = 0;
         for (let i = 0; i < input.length; i++) {
             let job = Number(input[i]);
             let smallestLoad = Number.MAX_VALUE;
             let indexOfSmallestLoad = 0;
             let nextLoad = 0;
             for (let j = 0; j < numOfMachines; j++) {
-                let loadOnThisMachine = Number(machines[j]) + job / Number(machineSpeeds[j]);
+                let currentMachineSpeed = machineSpeeds[j];
+                let loadOnThisMachine = Number(machines[j]) + job / Number(currentMachineSpeed);
                 if (loadOnThisMachine < smallestLoad) {
                     smallestLoad = loadOnThisMachine;
-                    nextLoad = job / Number(machineSpeeds[j]);
+                    nextLoad = job / Number(currentMachineSpeed);
                     indexOfSmallestLoad = j;
+                    speed = currentMachineSpeed;
                 }
             }
             machines[indexOfSmallestLoad] += nextLoad;
             explanation = "The previous job was: " + input[i] + ", we scheduled it on the " +
-                (indexOfSmallestLoad + 1) + ". machine to minimize the makespan.";
+                (indexOfSmallestLoad + 1) + ". machine which has a speed of " + speed + ".";
             history.set(Number(i + 1), { machines: machines.slice(), explanation: explanation });
         }
 

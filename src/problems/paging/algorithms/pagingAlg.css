@@ -8,6 +8,8 @@
   display: inline-flex;
   font-size: xx-large;
   height: 2.2em;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .highlighted {
