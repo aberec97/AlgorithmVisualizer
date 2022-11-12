@@ -47,6 +47,21 @@ class PagingAlgorithm extends Component {
         }
     };
 
+    firstStep = () => {
+        if (!this.state.history || this.state.cost === 0) return;
+        this.setCurrentStep(0);
+    }
+
+    lastStep = () => {
+        const input = this.props.inputArray;
+        if (!input || input.length === 0 || !this.state.history || this.state.cost === 0) return;
+        this.setCurrentStep(this.props.inputArray.length);
+    }
+
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
+
     findRemovedElement(currCache, nextCache) {
         let removedElementIndex = -1;
         for (let i = 0; i < currCache.length; i++) {
@@ -229,8 +244,10 @@ class PagingAlgorithm extends Component {
                 <br />
                 <div>
                     <div>
+                        <Button variant="light" onClick={this.firstStep}>|&lt;</Button>
                         <Button variant="light" onClick={this.previousStep}>&lt;</Button>
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
+                        <Button variant="light" onClick={this.lastStep}>&gt;|</Button>
                     </div>
                     <br />
                     {costVisualization}
