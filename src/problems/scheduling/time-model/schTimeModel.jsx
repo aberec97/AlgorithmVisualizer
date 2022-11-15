@@ -72,12 +72,11 @@ class SchTimeModel extends Component {
                 </div>
                 <SchTimeModelAlgorithm
                     selectedAlgorithm={this.state.selectedAlgorithm}
-                    input={this.state.inputArray}
+                    inputArray={this.state.inputArray}
                     numOfMachines={this.state.numOfMachines}
                 >
                 </SchTimeModelAlgorithm>
                 <br />
-                Algorithm is not implemented yet!
             </React.Fragment>
         );
     }

@@ -47,7 +47,7 @@ class BinPackingVisualization extends Component {
                 Current step: {this.props.currentStep} / {inputLength}
                 <p className='explanation'>{this.props.history.get(this.props.currentStep)['explanation']}</p>
                 <Arrows
-                    input={this.props.input}
+                    input={this.props.input.length}
                     history={this.props.history}
                     cost={this.props.cost}
                     currentStep={this.props.currentStep}

@@ -76,7 +76,7 @@ class SchTimeModelInput extends Component {
             job.push(rnd2.toString());
             input.push(job + ';');
         }
-        this.setState({ input: input, warning: <div></div> })
+        this.setState({ input: input, isInputValid: true, warning: <div></div> })
     }
 
     readInput = () => {
@@ -87,9 +87,17 @@ class SchTimeModelInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
-        const jobs = separated.map(s => Array.from(s.split(" ")));
-        const onlyNumbers = jobs.map(j => j.filter(Number));
-        this.props.onSetInputArray(onlyNumbers);
+        const trimmed = separated.map(s => s.trimStart());
+        const jobs = trimmed.map(s => Array.from(s.split(" ")));
+        let numbers = [];
+        for (let i = 0; i < jobs.length; i++) {
+            let curr = [];
+            for (let j = 0; j < jobs[i].length; j++) {
+                curr.push(Number(jobs[i][j]));
+            }
+            numbers.push(curr);
+        }
+        this.props.onSetInputArray(numbers);
         this.props.onSetNumOfMachines(this.state.machines);
         this.setState({ isInputReady: true });
     };

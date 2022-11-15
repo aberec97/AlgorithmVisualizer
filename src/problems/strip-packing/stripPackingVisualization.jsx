@@ -70,7 +70,7 @@ class StripPackingVisualization extends Component {
                 {costViz}
                 <p>Current step: {this.props.currentStep} / {this.props.inputArray.length}</p>
                 <Arrows
-                    input={this.props.inputArray}
+                    input={this.props.inputArray.length}
                     history={this.props.history}
                     cost={this.props.cost}
                     currentStep={this.props.currentStep}

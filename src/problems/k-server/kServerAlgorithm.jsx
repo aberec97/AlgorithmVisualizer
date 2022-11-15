@@ -258,7 +258,7 @@ class KServerAlgorithm extends Component {
                 <br />
                 <div>
                     <Arrows
-                        input={this.props.input}
+                        input={this.props.input.length}
                         history={this.state.history}
                         cost={this.state.cost}
                         currentStep={this.state.currentStep}

@@ -86,10 +86,10 @@ class ListAccessAlgorithm extends Component {
             if (bitOfQueriedElement > 0) {
                 this.moveToFront(linkedList, queriedElementIndex, queriedElement);
                 bits[Number(queriedElement) - 1] = 0;
-                bitExplanation = "It's bit was 1 so we moved it to the front of the list and set the bit to 0."
+                bitExplanation = "Its bit was 1 so we moved it to the front of the list and set the bit to 0."
             } else {
                 bits[Number(queriedElement) - 1] = 1;
-                bitExplanation = "It's bit was 0 so we did not move it to the front of the list and set the bit to 1."
+                bitExplanation = "Its bit was 0 so we did not move it to the front of the list and set the bit to 1."
             }
             let currentCost = Number(queriedElementIndex) + 1;
             cost += currentCost;
@@ -134,7 +134,7 @@ class ListAccessAlgorithm extends Component {
                 </ListAccessVisualization>
                 {cost}
                 <Arrows
-                    input={this.state.input}
+                    input={this.state.input.length}
                     history={this.state.history}
                     cost={this.state.cost}
                     currentStep={this.state.currentStep}

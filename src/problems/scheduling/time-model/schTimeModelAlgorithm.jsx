@@ -1,7 +1,41 @@
 import React, { Component } from 'react';
+import SchTimeModelVisualization from './schTimeModelVisualization';
+import Arrows from '../../../common/arrows';
 
 class SchTimeModelAlgorithm extends Component {
-    state = {}
+    state = {
+        currentStep: 0,
+        makeSpan: 0,
+        history: new Map(),
+        visualize: false,
+        input: '',
+        numOfMachines: '',
+        counter: 0
+    }
+
+    setCurrentStep = (value) => {
+        this.setState({ currentStep: value });
+    }
+
+    solveWithSelectedAlgorithm(selectedAlg, input, numOfMachines) {
+        if (!selectedAlg) return null;
+        let normalInput = [];
+        for (let i = 0; i < input.length; i++) {
+            normalInput.push({ job: Number(input[i][0]), time: Number(input[i][1]) });
+        }
+        let result = { makeSpan: 0, history: null };
+        switch (selectedAlg) {
+            case "INTV": result = this.solveWithINTV(normalInput, numOfMachines); break;
+            case "Online LPT": result = this.solveWithOnlineLPT(normalInput, numOfMachines); break;
+            default: result = null;
+        }
+        this.setState({
+            makeSpan: result['makeSpan'], history: result['history'], counter: result['counter'],
+            selectedAlgorithm: selectedAlg, input: input,
+            numOfMachines: numOfMachines, currentStep: 0, visualize: true
+        });
+        return result;
+    }
 
     sortJobsByTime(items) {
         return items.sort((a, b) => {
@@ -36,22 +70,29 @@ class SchTimeModelAlgorithm extends Component {
     //eddig megérkezett jobokat ütemezi, ismét egy optimális ütemezést felhasználva.
     solveWithINTV(input, numOfMachines) {
         let sortedInput = this.sortJobsByTime(input);
-        let result = [];
+        let makeSpan = 0;
 
         let machines = [];
         for (let j = 0; j < numOfMachines; j++) {
             machines.push({ load: 0, items: [] });
         }
 
+        let history = new Map();
+        let explanation = "";
+
         let startTime = sortedInput[0]['time'];
         let jobsForScheduling = [];
+        let counter = 0;
+
         for (let i = 0; i < sortedInput.length; i++) {
             if (sortedInput[i]['time'] <= startTime) {
                 jobsForScheduling.push(sortedInput[i]);
             } else {
                 const machinesForSchedule = JSON.parse(JSON.stringify(machines));
                 let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
-                result.push(currentResult);
+                explanation = "Az előző pillanatban érkezett jobokat beütemeztük.";
+                makeSpan += currentResult['maxLoad'];
+                history.set(counter++, { machines: currentResult['machines'].slice(), maxLoad: currentResult['maxLoad'], explanation: explanation });
                 jobsForScheduling = [];
                 //a következő ütemezésbe azokat az elemeket vesszük be, melyek az előző ütemezés végén vagy azelőtt érkeztek meg.
                 (currentResult['maxLoad'] + startTime) > sortedInput[i]['time'] ? startTime += currentResult['maxLoad'] : startTime = sortedInput[i]['time'];
@@ -61,10 +102,11 @@ class SchTimeModelAlgorithm extends Component {
         if (jobsForScheduling.length > 0) {
             const machinesForSchedule = JSON.parse(JSON.stringify(machines));
             let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
-            result.push(currentResult);
+            makeSpan += currentResult['maxLoad'];
+            explanation = "A megmaradt jobokat beütemezzük!";
+            history.set(counter++, { machines: currentResult['machines'].slice(), maxLoad: currentResult['maxLoad'], explanation: explanation });
         }
-        console.log("result:", result);
-        return result;
+        return { makeSpan, history, counter };
     }
 
     getMinLoad(machines) {
@@ -109,11 +151,16 @@ class SchTimeModelAlgorithm extends Component {
     //TODO: ezt alaposabban tesztelni! - meg kell nezni mi tortenik, ha nagyobb szünet van - pl. előző job 3s-nél van kész, a kövi viszont csak 5s-kor jön.
     //Azt a jobot ütemezi először, amelyik a legnehezebb. Amint felszabadul egy gép, megnézi az addig érkezett jobokat és a leghosszabbat rárakja.
     solveWithOnlineLPT(input, numOfMachines) {
+        console.log("running online lpt!");
         let sortedInput = this.sortJobsByTimeAndSize(input);
         let machines = [];
         for (let j = 0; j < numOfMachines; j++) {
             machines.push({ load: 0, items: [] });
         }
+        let makeSpan = 0;
+        let history = new Map();
+        let explanation = "";
+        let counter = 0;
 
         let availableJobs = [];
         let startTime = sortedInput[0]['time'];
@@ -123,6 +170,11 @@ class SchTimeModelAlgorithm extends Component {
                 availableJobs.push(item);
             } else {
                 let currScheduleResult = this.scheduleAvailableJobs(availableJobs, machines);
+                explanation = "Felszabadult egy gép, ütemezünk!";
+                let currMachines = JSON.parse(JSON.stringify(machines));
+                let prevJobs = JSON.parse(JSON.stringify(availableJobs));
+                if (currScheduleResult['remainingJobs'].length > 0) prevJobs.concat(currScheduleResult['remainingJobs']);
+                history.set(counter++, { machines: currMachines, prevJobs, explanation: explanation });
                 availableJobs = JSON.parse(JSON.stringify(currScheduleResult['remainingJobs']));
                 availableJobs.push(item);
                 startTime = currScheduleResult['newStartTime'];
@@ -130,20 +182,52 @@ class SchTimeModelAlgorithm extends Component {
         }
         if (availableJobs.length > 0) {
             this.scheduleAvailableJobs(availableJobs, machines);
+            explanation = "A megmaradt jobokat beütemezzük!";
+            let currMachines = JSON.parse(JSON.stringify(machines));
+            history.set(counter++, { machines: currMachines, prevJobs: availableJobs, explanation: explanation });
         }
-
-        console.log("result:", machines);
-        return machines;
+        let machineLoads = machines.map(e => e.load);
+        makeSpan = Math.max(...machineLoads);
+        return { makeSpan, history, counter };
     }
 
     render() {
+        let history;
+
+        if (this.state.makeSpan > 0) {
+            history = this.state.history;
+        }
+
+        let visualization = this.state.visualize ?
+            <React.Fragment>
+                <SchTimeModelVisualization
+                    inputArray={this.state.input}
+                    numOfMachines={this.state.numOfMachines}
+                    currentStep={this.state.currentStep}
+                    history={history}
+                    makeSpan={this.state.makeSpan}
+                    selectedAlgorithm={this.state.selectedAlgorithm}
+                    counter={this.state.counter}
+                ></SchTimeModelVisualization>
+                <Arrows
+                    length={this.state.counter}
+                    history={this.state.history}
+                    cost={this.state.makeSpan}
+                    currentStep={this.state.currentStep}
+                    setCurrentStep={this.setCurrentStep}
+                ></Arrows>
+            </React.Fragment> : <React.Fragment></React.Fragment>;
+
         return (
-            <button
-                className='btn btn-success'
-                onClick={() => this.solveWithOnlineLPT([{ job: 1, time: 0 }, { job: 1, time: 0 }, { job: 2, time: 0 }, { job: 3, time: 0 },
-                { job: 2, time: 1 }, { job: 2, time: 2 }, { job: 3, time: 2 }, { job: 1, time: 3 }, { job: 2, time: 4 }, { job: 1, time: 5 }], 3)}>
-                Run
-            </button>);
+            <React.Fragment>
+                <button
+                    className='btn btn-success'
+                    onClick={() => this.solveWithSelectedAlgorithm(this.props.selectedAlgorithm, this.props.inputArray, this.props.numOfMachines)}>
+                    Run
+                </button>
+                {visualization}
+            </React.Fragment>
+        );
     }
 }
 

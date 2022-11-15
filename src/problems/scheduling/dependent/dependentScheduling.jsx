@@ -89,7 +89,7 @@ class DependentScheduling extends Component {
                 >
                 </StandardSchVisualization>
                 <Arrows
-                    input={this.state.inputArray}
+                    input={this.state.inputArray.length}
                     history={this.state.history}
                     cost={this.state.makeSpan}
                     currentStep={this.state.currentStep}
