@@ -131,7 +131,6 @@ class SchTimeModelAlgorithm extends Component {
         });
     }
 
-    //Ezt lehetne optimalizalni ha marad ido
     scheduleAvailableJobs(items, machines) {
         items.sort((a, b) => b['job'] - a['job']);
         let originalStartTime = this.getMinLoad(machines)['minLoad'];
@@ -166,21 +165,35 @@ class SchTimeModelAlgorithm extends Component {
         let counter = 0;
 
         let availableJobs = [];
+        let remainingJobs = [];
         let startTime = sortedInput[0]['time'];
         for (let i = 0; i < sortedInput.length; i++) {
             let item = sortedInput[i];
             if (item['time'] <= startTime) {
                 availableJobs.push(item);
             } else {
-                let currScheduleResult = this.scheduleAvailableJobs(availableJobs, machines);
-                explanation = "Felszabadult egy gép, ütemezünk!";
-                let currMachines = JSON.parse(JSON.stringify(machines));
-                let prevJobs = JSON.parse(JSON.stringify(availableJobs));
-                if (currScheduleResult['remainingJobs'].length > 0) prevJobs.concat(currScheduleResult['remainingJobs']);
-                history.set(counter++, { machines: currMachines, prevJobs, explanation: explanation });
-                availableJobs = JSON.parse(JSON.stringify(currScheduleResult['remainingJobs']));
+                let schResult = this.scheduleAvailableJobs(availableJobs, machines);
+                remainingJobs = schResult['remainingJobs'];
+                history.set(counter++, { machines: JSON.parse(JSON.stringify(machines)), prevJobs: availableJobs, explanation: explanation });
+                while (startTime < item['time']) {
+                    if (remainingJobs.length > 0) {
+                        let schResult = this.scheduleAvailableJobs(remainingJobs, machines);
+                        remainingJobs = schResult['remainingJobs'];
+                        startTime = schResult['newStartTime'];
+                        history.set(counter++, { machines: JSON.parse(JSON.stringify(machines)), prevJobs: availableJobs, explanation: explanation });
+                    } else {
+                        break;
+                    }
+                }
+                if (startTime < item['time']) startTime = item['time'];
+                for (let j = 0; j < machines.length; j++) {
+                    if (machines[j]['load'] < startTime) {
+                        machines[j]['load'] = startTime;
+                    }
+                }
+                availableJobs = [];
                 availableJobs.push(item);
-                startTime = currScheduleResult['newStartTime'];
+                if (remainingJobs.length > 0) availableJobs.concat(remainingJobs);
             }
         }
         if (availableJobs.length > 0) {
