@@ -91,11 +91,15 @@ class SchTimeModelAlgorithm extends Component {
                 const machinesForSchedule = JSON.parse(JSON.stringify(machines));
                 let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
                 explanation = "Az előző pillanatban érkezett jobokat beütemeztük.";
-                makeSpan += currentResult['maxLoad'];
-                history.set(counter++, { machines: currentResult['machines'].slice(), maxLoad: currentResult['maxLoad'], explanation: explanation });
-                jobsForScheduling = [];
+                let maxLoad = currentResult['maxLoad'];
+                let startTime1 = startTime;
                 //a következő ütemezésbe azokat az elemeket vesszük be, melyek az előző ütemezés végén vagy azelőtt érkeztek meg.
-                (currentResult['maxLoad'] + startTime) > sortedInput[i]['time'] ? startTime += currentResult['maxLoad'] : startTime = sortedInput[i]['time'];
+                (maxLoad + startTime) > sortedInput[i]['time'] ? startTime += maxLoad : startTime = sortedInput[i]['time'];
+                let startTime2 = startTime;
+                if (startTime > maxLoad) maxLoad = startTime2 - startTime1;
+                makeSpan += maxLoad;
+                history.set(counter++, { machines: currentResult['machines'].slice(), maxLoad: maxLoad, explanation: explanation });
+                jobsForScheduling = [];
                 jobsForScheduling.push(sortedInput[i]);
             }
         }
@@ -151,7 +155,6 @@ class SchTimeModelAlgorithm extends Component {
     //TODO: ezt alaposabban tesztelni! - meg kell nezni mi tortenik, ha nagyobb szünet van - pl. előző job 3s-nél van kész, a kövi viszont csak 5s-kor jön.
     //Azt a jobot ütemezi először, amelyik a legnehezebb. Amint felszabadul egy gép, megnézi az addig érkezett jobokat és a leghosszabbat rárakja.
     solveWithOnlineLPT(input, numOfMachines) {
-        console.log("running online lpt!");
         let sortedInput = this.sortJobsByTimeAndSize(input);
         let machines = [];
         for (let j = 0; j < numOfMachines; j++) {
