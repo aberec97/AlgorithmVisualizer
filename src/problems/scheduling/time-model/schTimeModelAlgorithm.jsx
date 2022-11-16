@@ -90,7 +90,7 @@ class SchTimeModelAlgorithm extends Component {
             } else {
                 const machinesForSchedule = JSON.parse(JSON.stringify(machines));
                 let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
-                explanation = "Az előző pillanatban érkezett jobokat beütemeztük.";
+                explanation = "We scheduled the jobs that came in the " + startTime + ". minute.";
                 let maxLoad = currentResult['maxLoad'];
                 let startTime1 = startTime;
                 //a következő ütemezésbe azokat az elemeket vesszük be, melyek az előző ütemezés végén vagy azelőtt érkeztek meg.
@@ -107,7 +107,7 @@ class SchTimeModelAlgorithm extends Component {
             const machinesForSchedule = JSON.parse(JSON.stringify(machines));
             let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
             makeSpan += currentResult['maxLoad'];
-            explanation = "A megmaradt jobokat beütemezzük!";
+            explanation = "We scheduled the remaining jobs.";
             history.set(counter++, { machines: currentResult['machines'].slice(), maxLoad: currentResult['maxLoad'], explanation: explanation });
         }
         return { makeSpan, history, counter };
@@ -151,7 +151,6 @@ class SchTimeModelAlgorithm extends Component {
         return { remainingJobs, newStartTime };
     }
 
-    //TODO: ezt alaposabban tesztelni! - meg kell nezni mi tortenik, ha nagyobb szünet van - pl. előző job 3s-nél van kész, a kövi viszont csak 5s-kor jön.
     //Azt a jobot ütemezi először, amelyik a legnehezebb. Amint felszabadul egy gép, megnézi az addig érkezett jobokat és a leghosszabbat rárakja.
     solveWithOnlineLPT(input, numOfMachines) {
         let sortedInput = this.sortJobsByTimeAndSize(input);
@@ -174,6 +173,7 @@ class SchTimeModelAlgorithm extends Component {
             } else {
                 let schResult = this.scheduleAvailableJobs(availableJobs, machines);
                 remainingJobs = schResult['remainingJobs'];
+                explanation = "We scheduled the jobs that came in the " + startTime + ". minute.";
                 history.set(counter++, { machines: JSON.parse(JSON.stringify(machines)), prevJobs: availableJobs, explanation: explanation });
                 while (startTime < item['time']) {
                     if (remainingJobs.length > 0) {
@@ -188,6 +188,7 @@ class SchTimeModelAlgorithm extends Component {
                 if (startTime < item['time']) startTime = item['time'];
                 for (let j = 0; j < machines.length; j++) {
                     if (machines[j]['load'] < startTime) {
+                        machines[j]['items'].push({ space: 2 * (startTime - machines[j]['load']) + "em" });
                         machines[j]['load'] = startTime;
                     }
                 }
@@ -198,7 +199,7 @@ class SchTimeModelAlgorithm extends Component {
         }
         if (availableJobs.length > 0) {
             this.scheduleAvailableJobs(availableJobs, machines);
-            explanation = "A megmaradt jobokat beütemezzük!";
+            explanation = "We scheduled the remaining jobs.";
             let currMachines = JSON.parse(JSON.stringify(machines));
             history.set(counter++, { machines: currMachines, prevJobs: availableJobs, explanation: explanation });
         }
@@ -226,7 +227,7 @@ class SchTimeModelAlgorithm extends Component {
                     counter={this.state.counter}
                 ></SchTimeModelVisualization>
                 <Arrows
-                    length={this.state.counter}
+                    input={this.state.counter}
                     history={this.state.history}
                     cost={this.state.makeSpan}
                     currentStep={this.state.currentStep}
