@@ -5,7 +5,7 @@ class Arrows extends Component {
     state = {}
 
     nextStep = () => {
-        const length = this.props.length;
+        const length = this.props.input;
         if (!length || length === 0 || !this.props.history || this.props.cost === 0) return;
         const currentStep = this.props.currentStep;
         const nextStep = currentStep + 1;
@@ -29,9 +29,9 @@ class Arrows extends Component {
     }
 
     lastStep = () => {
-        const length = this.props.length;
+        const length = this.props.input;
         if (!length || length === 0 || !this.props.history || this.props.cost === 0) return;
-        this.props.setCurrentStep(this.props.length);
+        this.props.setCurrentStep(length);
     }
 
     render() {
