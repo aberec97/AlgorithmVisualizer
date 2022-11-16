@@ -16,6 +16,8 @@ class PagingAlgorithm extends Component {
         selectedAlgorithm: ''
     }
 
+    intervalID = 0;
+
     nextStep = () => {
         const length = this.props.inputArray.length;
         if (length === 0 || !this.state.history || this.state.cost === 0) return;
@@ -29,6 +31,8 @@ class PagingAlgorithm extends Component {
         }
         if (Number(currentStep) < Number(length)) {
             this.setState({ currentStep: nextStep });
+        } else {
+            clearInterval(this.intervalID);
         }
     };
 
@@ -60,6 +64,20 @@ class PagingAlgorithm extends Component {
 
     setCurrentStep = (value) => {
         this.setState({ currentStep: value });
+    }
+
+    start = () => {
+        this.intervalID = setInterval(() => {
+            this.nextStep();
+        }, 1000);
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.intervalID);
+    }
+
+    stop = () => {
+        clearInterval(this.intervalID);
     }
 
     findRemovedElement(currCache, nextCache) {
@@ -246,6 +264,8 @@ class PagingAlgorithm extends Component {
                     <div>
                         <Button variant="light" onClick={this.firstStep}>|&lt;</Button>
                         <Button variant="light" onClick={this.previousStep}>&lt;</Button>
+                        <Button variant="light" onClick={this.stop}><i className="fa-sharp fa-solid fa-pause"></i></Button>
+                        <Button variant="light" onClick={this.start}><i className="fa-sharp fa-solid fa-play"></i></Button>
                         <Button variant="light" onClick={this.nextStep}>&gt;</Button>
                         <Button variant="light" onClick={this.lastStep}>&gt;|</Button>
                     </div>
