@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 
 class Arrows extends Component {
+    state = {
+        alreadyStarted: false
+    }
     intervalID = 0;
 
     nextStep = () => {
@@ -38,9 +41,12 @@ class Arrows extends Component {
     }
 
     start = () => {
-        this.intervalID = setInterval(() => {
-            this.nextStep();
-        }, 1000);
+        if (!this.state.alreadyStarted) {
+            this.intervalID = setInterval(() => {
+                this.nextStep();
+            }, 1000);
+            this.setState({ alreadyStarted: true });
+        }
     }
 
     componentWillUnmount = () => {
@@ -48,7 +54,10 @@ class Arrows extends Component {
     }
 
     stop = () => {
-        clearInterval(this.intervalID);
+        if (this.state.alreadyStarted) {
+            clearInterval(this.intervalID);
+            this.setState({ alreadyStarted: false });
+        }
     }
 
     render() {

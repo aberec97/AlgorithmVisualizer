@@ -67,9 +67,12 @@ class PagingAlgorithm extends Component {
     }
 
     start = () => {
-        this.intervalID = setInterval(() => {
-            this.nextStep();
-        }, 1000);
+        if (!this.state.alreadyStarted) {
+            this.intervalID = setInterval(() => {
+                this.nextStep();
+            }, 1000);
+            this.setState({ alreadyStarted: true });
+        }
     }
 
     componentWillUnmount = () => {
@@ -77,7 +80,10 @@ class PagingAlgorithm extends Component {
     }
 
     stop = () => {
-        clearInterval(this.intervalID);
+        if (this.state.alreadyStarted) {
+            clearInterval(this.intervalID);
+            this.setState({ alreadyStarted: false });
+        }
     }
 
     findRemovedElement(currCache, nextCache) {
