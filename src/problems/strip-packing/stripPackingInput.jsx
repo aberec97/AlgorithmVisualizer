@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import SimpleInput from '../../common/simpleInput';
-import NumberInput from '../../common/numberInput';
+import { validateNumberInput } from '../../common/utilities';
 
 class StipPackingInput extends Component {
     state = {
@@ -43,6 +43,16 @@ class StipPackingInput extends Component {
         });
     }
 
+    setR = (event) => {
+        let input = event.target.value;
+        this.changeR(input);
+        if (input <= 1) {
+            this.changeRValidity(validateNumberInput(input));
+        } else {
+            this.changeRValidity(false);
+        }
+    }
+
     getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -66,7 +76,8 @@ class StipPackingInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
-        const boxes = separated.map(s => Array.from(s.split(" ")));
+        const trimmed = separated.map(s => s.trim());
+        const boxes = trimmed.map(s => Array.from(s.split(" ")));
         const onlyNumbers = boxes.map(j => j.map(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetRValue(this.state.r);
@@ -92,14 +103,18 @@ class StipPackingInput extends Component {
                     acceptedCharacters={['.', ';', ',', ' ']}
                 >
                 </SimpleInput>
-                <NumberInput
-                    label={"R:"}
-                    cache={this.state.r}
-                    changeCache={this.changeR}
-                    changeCacheValidity={this.changeRValidity}
-                    validity={this.state.isRValid}
-                >
-                </NumberInput>
+                <div className='inputField'>
+                    <label>{"R:"}</label>
+                    <input
+                        type="number"
+                        min={0}
+                        max={1}
+                        step={0.1}
+                        value={this.state.r}
+                        onChange={this.setR}
+                        onKeyDown={(event) => event.key === 'e' && event.preventDefault()}
+                        className='cache' />
+                </div>
                 <button className='btn btn-success' onClick={this.readInput}>Save</button>
                 {validationMessage}
                 <h6>

@@ -6,7 +6,7 @@ import SimpleInput from '../../../common/simpleInput';
 class IndependentSchInput extends Component {
     state = {
         input: '',
-        machines: undefined,
+        machines: '',
         isInputValid: false,
         isMachinesValid: false,
         inputIsReady: true,
@@ -88,7 +88,8 @@ class IndependentSchInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
-        const jobs = separated.map(s => Array.from(s.split(" ")));
+        const trimmed = separated.map(s => s.trim());
+        const jobs = trimmed.map(s => Array.from(s.split(" ")));
         const onlyNumbers = jobs.map(j => j.map(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetNumOfMachines(this.state.machines);

@@ -42,7 +42,8 @@ class SimpleInputController extends Component {
             const inputStr = this.state.input.toString();
             const withoutCommas = inputStr.replace(/,/g, " ");
             const inputArray = Array.from(withoutCommas.split(" "));
-            const onlyNumbers = inputArray.map(Number);
+            const trimmed = inputArray.map(s => s.trim());
+            const onlyNumbers = trimmed.map(Number);
             this.setState({ inputIsReady: true });
             this.props.onSetInputArray(onlyNumbers);
             this.props.onSetCacheSize(this.state.cache);

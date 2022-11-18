@@ -102,7 +102,12 @@ class StripPackingContainer extends Component {
                 }
             }
         }
-        this.setState({ history, cost, inputForVisualization: input, rValueForVisualization: rValue, currentStep: 0, visualize: true });
+        if (history && cost > 0) {
+            this.setState({
+                history, cost, inputForVisualization: input,
+                rValueForVisualization: rValue, currentStep: 0, visualize: true
+            });
+        }
     }
 
     render() {

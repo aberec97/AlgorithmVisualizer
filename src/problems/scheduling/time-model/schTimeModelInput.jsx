@@ -6,7 +6,7 @@ import SimpleInput from '../../../common/simpleInput';
 class SchTimeModelInput extends Component {
     state = {
         input: '',
-        machines: undefined,
+        machines: '',
         isInputValid: false,
         isMachinesValid: false,
         isInputReady: true,
@@ -87,7 +87,7 @@ class SchTimeModelInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";").filter(elem => elem));
-        const trimmed = separated.map(s => s.trimStart());
+        const trimmed = separated.map(s => s.trim());
         const jobs = trimmed.map(s => Array.from(s.split(" ")));
         let numbers = [];
         for (let i = 0; i < jobs.length; i++) {
