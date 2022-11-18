@@ -13,7 +13,8 @@ class PagingAlgorithm extends Component {
         isReadyForVisualization: false,
         inputArray: '',
         cacheSize: '',
-        selectedAlgorithm: ''
+        selectedAlgorithm: '',
+        alreadyStarted: false
     }
 
     intervalID = 0;

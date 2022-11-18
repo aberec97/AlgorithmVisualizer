@@ -67,7 +67,7 @@ class StipPackingInput extends Component {
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
         const boxes = separated.map(s => Array.from(s.split(" ")));
-        const onlyNumbers = boxes.map(j => j.filter(Number));
+        const onlyNumbers = boxes.map(j => j.map(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetRValue(this.state.r);
         this.setState({ isInputReady: true });

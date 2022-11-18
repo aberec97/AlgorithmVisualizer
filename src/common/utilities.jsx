@@ -4,7 +4,6 @@ export function validateInput(input, acceptedCharacters) {
         if (acceptedCharacters === currentChar || acceptedCharacters.includes(currentChar)) {
             continue;
         } else if (isNaN(Number.parseInt(currentChar))) {
-            console.log("input is invalid!!")
             return false;
         }
     }

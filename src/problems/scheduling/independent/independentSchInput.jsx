@@ -89,7 +89,7 @@ class IndependentSchInput extends Component {
         const withoutCommas = inputStr.replace(/,/g, " ");
         const separated = Array.from(withoutCommas.split(";"));
         const jobs = separated.map(s => Array.from(s.split(" ")));
-        const onlyNumbers = jobs.map(j => j.filter(Number));
+        const onlyNumbers = jobs.map(j => j.map(Number));
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetNumOfMachines(this.state.machines);
         this.setState({ inputIsReady: true });

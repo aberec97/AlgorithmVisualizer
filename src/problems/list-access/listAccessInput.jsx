@@ -66,7 +66,7 @@ class ListAccessInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
-        const onlyNumbers = inputArray.filter(Number);
+        const onlyNumbers = inputArray.map(Number);
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetCacheSize(this.state.length);
         this.setState({ inputIsReady: true });

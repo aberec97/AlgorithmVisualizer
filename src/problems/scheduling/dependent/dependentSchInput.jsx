@@ -43,12 +43,12 @@ class DependentSchInput extends Component {
         const inputStr = this.state.input.toString();
         const withoutCommas = inputStr.replace(/,/g, " ");
         const inputArray = Array.from(withoutCommas.split(" "));
-        const onlyNumbers = inputArray.filter(Number);
+        const onlyNumbers = inputArray.map(Number);
         this.props.onSetInputArray(onlyNumbers);
         const inputStrSpeed = this.state.machineSpeeds.toString();
         const withoutCommasSpeed = inputStrSpeed.replace(/,/g, " ");
         const inputArraySpeed = Array.from(withoutCommasSpeed.split(" "));
-        const onlyNumbersSpeed = inputArraySpeed.filter(Number);
+        const onlyNumbersSpeed = inputArraySpeed.map(Number);
         this.props.onSetInputArray(onlyNumbers);
         this.props.onSetMachineSpeeds(onlyNumbersSpeed);
         this.setState({ inputIsReady: true });
