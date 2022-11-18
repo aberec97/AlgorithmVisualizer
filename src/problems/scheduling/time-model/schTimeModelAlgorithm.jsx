@@ -90,7 +90,7 @@ class SchTimeModelAlgorithm extends Component {
             } else {
                 const machinesForSchedule = JSON.parse(JSON.stringify(machines));
                 let currentResult = this.scheduleJobs(jobsForScheduling, machinesForSchedule);
-                explanation = "We scheduled the jobs that came in the " + startTime + ". minute.";
+                explanation = "We scheduled the jobs that came in until the " + startTime + ". minute.";
                 let maxLoad = currentResult['maxLoad'];
                 let startTime1 = startTime;
                 //a következő ütemezésbe azokat az elemeket vesszük be, melyek az előző ütemezés végén vagy azelőtt érkeztek meg.
@@ -173,7 +173,7 @@ class SchTimeModelAlgorithm extends Component {
             } else {
                 let schResult = this.scheduleAvailableJobs(availableJobs, machines);
                 remainingJobs = schResult['remainingJobs'];
-                explanation = "We scheduled the jobs that came in the " + startTime + ". minute.";
+                explanation = "We scheduled the jobs that came in until the " + startTime + ". minute.";
                 history.set(counter++, { machines: JSON.parse(JSON.stringify(machines)), prevJobs: availableJobs, explanation: explanation });
                 while (startTime < item['time']) {
                     if (remainingJobs.length > 0) {
