@@ -17,7 +17,7 @@ class PagingVisualization extends Component {
                 } else if (i === this.props.currentStep) {
                     elements.push(<div className='highlighted m-2' key={i}>{input[i]}</div>);
                 } else {
-                    elements.push(<div className='m-2' key={i}>{input[i]}</div>);
+                    elements.push(<div className='normal m-2' key={i}>{input[i]}</div>);
                 }
             }
         }
