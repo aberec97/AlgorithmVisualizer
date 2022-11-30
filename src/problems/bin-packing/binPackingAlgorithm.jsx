@@ -61,7 +61,7 @@ class BinPackingAlgorithm extends Component {
                 explanation = "The previous item was " + input[i] +
                     ", we were able to store it in the open bin. This action was free because we didn't need to open a new bin.";
             }
-            history.set(Number(i + 1), { item: item, bin: bins.length, explanation: explanation });
+            history.set(Number(i + 1), { item: item, bin: bins.length - 1, explanation: explanation });
         }
         return { cost, history };
     }
@@ -86,7 +86,7 @@ class BinPackingAlgorithm extends Component {
                         fullness: item,
                         items: [item]
                     });
-                    chosenBin = j + 1;
+                    chosenBin = j;
                     cost += 1;
                     explanation = "The previous item was " + input[i] +
                         ", we did not have an open bin which could store it so we opened a new one. +1 cost.";
@@ -97,7 +97,7 @@ class BinPackingAlgorithm extends Component {
                     let sum = currentBin['fullness'] + item;
                     currentBin['fullness'] = sum;
                     currentBin['items'].push(item);
-                    chosenBin = bins.indexOf(currentBin) + 1;
+                    chosenBin = bins.indexOf(currentBin);
                     explanation = "The previous item was " + input[i] +
                         ", we were able to store it in the " + chosenBin + ". bin. This action was free as we didn't need to open a new bin.";
                     break;
@@ -123,7 +123,6 @@ class BinPackingAlgorithm extends Component {
 
         let visualization = this.state.visualize ? <React.Fragment>
             <p>You selected {this.state.selectedAlgorithm} with &#123; {inputStringForRender} &#125; input.</p>
-            <br />
             <BinPackingVisualization
                 history={this.state.history}
                 input={this.props.input}

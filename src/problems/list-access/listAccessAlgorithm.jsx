@@ -46,6 +46,7 @@ class ListAccessAlgorithm extends Component {
     }
 
     solveWithMTF(length, queries) {
+        console.log(queries);
         let linkedList = this.createLinkedList(length);
         let cost = Number(0);
         let history = new Map();
@@ -53,9 +54,9 @@ class ListAccessAlgorithm extends Component {
         history.set(0, { linkedList: linkedList.slice(), explanation: explanation });
 
         for (let i = 0; i < queries.length; i++) {
-            let queriedElement = Number(queries[i]);
+            let queriedElement = queries[i];
             let queriedElementIndex = linkedList.indexOf(queriedElement);
-            let currentCost = Number(queriedElementIndex) + 1;
+            let currentCost = queriedElementIndex + 1;
             cost += currentCost;
             this.moveToFront(linkedList, queriedElementIndex, queriedElement);
             explanation = "The previous query asked for " + queriedElement + ", it was in the " +

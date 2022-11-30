@@ -39,7 +39,6 @@ class StripPackingVisualization extends Component {
 
             shelvesForRender[index] =
                 <div key={i} className='shelfAndItem'>
-                    <label>{shelfHeightValue}</label>
                     <div key={i} style={{ height: shelfHeight }} className="shelf">{itemsToShelves[index]}
                     </div>
                 </div>;

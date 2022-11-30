@@ -111,45 +111,45 @@ class KServerAlgorithm extends Component {
                 let currentElement = allPositions[j];
                 if (currentElement === request) {
                     if (currentElement === allPositions[0]) {
-                        let nextElement = allPositions[j + 1];
-                        let distance = this.distance(request, nextElement);
+                        let nextServer = allPositions[j + 1];
+                        let distance = this.distance(request, nextServer);
                         cost += distance;
-                        this.moveServer(serverPositions, nextElement, request);
+                        this.moveServer(serverPositions, nextServer, request);
                         explanation = "The previous request asked for location " + request +
-                            ". We moved a server there from " + nextElement + ", the distance was " + distance + ". (+" + distance + ")";
+                            ". We moved a server there from " + nextServer + ", the distance was " + distance + ". (+" + distance + ")";
                         history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else if (currentElement === allPositions[allPositions.length - 1]) {
-                        let prevElement = allPositions[j - 1];
-                        let distance = this.distance(request, prevElement);
+                        let prevServer = allPositions[j - 1];
+                        let distance = this.distance(request, prevServer);
                         cost += distance;
-                        this.moveServer(serverPositions, prevElement, request);
+                        this.moveServer(serverPositions, prevServer, request);
                         explanation = "The previous request asked for location " + request +
-                            ". We moved a server there from " + prevElement + ", the distance was " + distance + ". (+" + distance + ")";
+                            ". We moved a server there from " + prevServer + ", the distance was " + distance + ". (+" + distance + ")";
                         history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         break;
                     }
                     else {
-                        let prevElement = allPositions[j - 1];
-                        let nextElement = allPositions[j + 1];
-                        let distanceRequestPrevElement = this.distance(request, prevElement);
-                        let distanceRequestNextElement = this.distance(request, nextElement);
-                        if (distanceRequestPrevElement <= distanceRequestNextElement) {
-                            cost += 2 * distanceRequestPrevElement;
-                            this.moveServer(serverPositions, prevElement, request);
-                            this.moveServer(serverPositions, nextElement, nextElement - distanceRequestPrevElement);
+                        let prevServer = allPositions[j - 1];
+                        let nextServer = allPositions[j + 1];
+                        let distanceRequestPrevServer = this.distance(request, prevServer);
+                        let distanceRequestNextServer = this.distance(request, nextServer);
+                        if (distanceRequestPrevServer <= distanceRequestNextServer) {
+                            cost += 2 * distanceRequestPrevServer;
+                            this.moveServer(serverPositions, prevServer, request);
+                            this.moveServer(serverPositions, nextServer, nextServer - distanceRequestPrevServer);
                             explanation = "The previous request asked for location " + request +
-                                ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
-                                " towards the requested location. This means we covered the distance of " + distanceRequestPrevElement + " twice. (+" + 2 * distanceRequestPrevElement + ")";
+                                ", it was between two servers so we moved the server at " + prevServer + " and the server at " + nextServer +
+                                " towards the requested location. This means we covered the distance of " + distanceRequestPrevServer + " twice. (+" + 2 * distanceRequestPrevServer + ")";
                             history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         } else {
-                            cost += 2 * distanceRequestNextElement;
-                            this.moveServer(serverPositions, nextElement, request);
-                            this.moveServer(serverPositions, prevElement, prevElement + distanceRequestNextElement);
+                            cost += 2 * distanceRequestNextServer;
+                            this.moveServer(serverPositions, nextServer, request);
+                            this.moveServer(serverPositions, prevServer, prevServer + distanceRequestNextServer);
                             explanation = "The previous request asked for location " + request +
-                                ", it was between two servers so we moved the server at " + prevElement + " and the server at " + nextElement +
-                                " towards the requested location. This means we covered the distance of " + distanceRequestNextElement + " twice. (+" + 2 * distanceRequestNextElement + ")";
+                                ", it was between two servers so we moved the server at " + prevServer + " and the server at " + nextServer +
+                                " towards the requested location. This means we covered the distance of " + distanceRequestNextServer + " twice. (+" + 2 * distanceRequestNextServer + ")";
                             history.set(Number(i + 1), { serverPositions: serverPositions.slice(), explanation });
                         }
                         break;

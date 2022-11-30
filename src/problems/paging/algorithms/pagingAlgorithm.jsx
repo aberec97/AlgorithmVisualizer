@@ -97,7 +97,7 @@ class PagingAlgorithm extends Component {
         return removedElementIndex;
     }
 
-    solveWithFIFO(input, cache_size) {
+    solveWithFIFO(input, cacheSize) {
         if (input.length === 0) {
             return { cost: 0, history: null };
         }
@@ -108,7 +108,7 @@ class PagingAlgorithm extends Component {
         history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
-            if (cache.length < cache_size && !cache.includes(currentElement)) {
+            if (cache.length < cacheSize && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
                 explanation = "The previous input element was " + currentElement +
@@ -129,7 +129,7 @@ class PagingAlgorithm extends Component {
         return { cost, history };
     }
 
-    solveWithLRU(input, cache_size) {
+    solveWithLRU(input, cacheSize) {
         if (input.length === 0) {
             return { cost: 0, history: null };
         }
@@ -141,7 +141,7 @@ class PagingAlgorithm extends Component {
         history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
-            if (cache.length < cache_size && !cache.includes(currentElement)) {
+            if (cache.length < cacheSize && !cache.includes(currentElement)) {
                 cache.push(currentElement);
                 cost++;
                 explanation = "The previous input element was " + currentElement +
@@ -150,7 +150,7 @@ class PagingAlgorithm extends Component {
                 let order = [];
                 for (let j = inputUntilNow.length - 1; j >= 0; j--) {
                     let currentJ = inputUntilNow[j];
-                    if (!order.includes(currentJ) && order.length < cache_size) {
+                    if (!order.includes(currentJ) && order.length < cacheSize) {
                         order.push(currentJ);
                     }
                 }
@@ -170,7 +170,7 @@ class PagingAlgorithm extends Component {
         return { cost, history };
     }
 
-    solveWithLFD(input, cache_size) {
+    solveWithLFD(input, cacheSize) {
         if (input.length === 0) {
             return { cost: 0, history: null };
         }
@@ -181,7 +181,7 @@ class PagingAlgorithm extends Component {
         history.set(0, { cache: cache.slice(), explanation: explanation });
         for (let i = 0; i < input.length; i++) {
             let currentElement = input[i];
-            if (cache.length < cache_size && !cache.includes(currentElement)) {
+            if (cache.length < cacheSize && !cache.includes(currentElement)) {
                 explanation = "The previous input element was " + currentElement +
                     ". Cache had room for it so we inserted it.";
                 cache.push(currentElement);
