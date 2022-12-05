@@ -48,7 +48,7 @@ class BinPackingInput extends Component {
             return;
         }
         const inputStr = this.state.input.toString();
-        const withoutCommas = inputStr.replace(/,/g, " ");
+        const withoutCommas = inputStr.replace(/,/g, " ").replace(/\s\s+/g, ' ');
         const inputArray = Array.from(withoutCommas.split(" "));
         const onlyNumbers = inputArray.map(Number);
         this.props.onSetInputArray(onlyNumbers);

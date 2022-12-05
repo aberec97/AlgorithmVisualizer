@@ -83,11 +83,11 @@ class KServerInput extends Component {
 
     readInput = () => {
         const inputStr = this.state.input.toString();
-        const withoutCommas = inputStr.replace(/,/g, " ");
+        const withoutCommas = inputStr.replace(/,/g, " ").replace(/\s\s+/g, ' ');
         const inputArray = Array.from(withoutCommas.split(" "));
         const inputNumbers = inputArray.map(Number);
         const startConfigStr = this.state.startConfig.toString();
-        const withoutCommas2 = startConfigStr.replace(/,/g, " ");
+        const withoutCommas2 = startConfigStr.replace(/,/g, " ").replace(/\s\s+/g, ' ');
         const inputArray2 = Array.from(withoutCommas2.split(" "));
         const startConfigNumbers = inputArray2.map(Number);
         this.props.onSetInputArray(inputNumbers);

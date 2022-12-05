@@ -85,7 +85,7 @@ class SchTimeModelInput extends Component {
             return;
         }
         const inputStr = this.state.input.toString();
-        const withoutCommas = inputStr.replace(/,/g, " ");
+        const withoutCommas = inputStr.replace(/,/g, " ").replace(/\s\s+/g, ' ');
         const separated = Array.from(withoutCommas.split(";").filter(elem => elem));
         const trimmed = separated.map(s => s.trim());
         const jobs = trimmed.map(s => Array.from(s.split(" ")));
